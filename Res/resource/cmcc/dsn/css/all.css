@@ -1,0 +1,478 @@
+@charset "utf-8";
+/* 全局样式 */
+* {
+	margin: 0;
+	padding: 0;
+}
+html {
+	height: 100%;
+	font-size: 16px;
+	font-family: "Microsoft YaHei","微软雅黑";
+}
+body {
+	height: 100%;
+	background-color: #fff;
+}
+li {
+	list-style:  none;
+}
+a:link,
+a:hover,
+a:visited {
+	text-decoration: none;
+}
+hr {
+	border-style: solid;
+	background-color: #000;
+}
+input,
+textarea {
+	font-size: 1rem;
+	font-family: "Microsoft YaHei","微软雅黑"
+}
+/* spinner效果遮罩 */
+.spinner-layout {
+	z-index: 500;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.4);
+}
+.spinner-wheel {
+	z-index: 550;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 3rem;
+	height: 3rem;
+	margin-top: -1.5rem;
+	margin-left: -1.5rem;
+	line-height: 3rem;
+	text-align: center;
+	/* inherited by spinner */
+	color: #10a0ea;
+	font-size: 1.6rem;
+}
+.spinner-layout .load-close {
+	z-index: 550;
+	position: absolute;
+	width: 1.8rem;
+	height: 1.8rem;
+	top: 3rem;
+	right: 1rem;
+	background-color: rgba(255,255,255,.4);
+	border-radius: 0 0 100% 100%;
+}
+.load-close .load-close-icon {
+	display: inline-block;
+	width: 1.8rem;
+	height: 1.8rem;
+	background-image: url('../img/load_close.png');
+	background-size: 1.2rem 1.2rem;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+/* 消息弹出框 */
+.dialog-layout {
+	z-index: 999;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-height: 100%;
+	background-color: rgba(0,0,0,0);
+}
+.dialog {
+	z-index: 250;
+	width: 90%;
+	/*height: 8rem;*/
+	height: initial;
+	position: relative;
+	margin-top: 50%;
+	margin-left: 5%;
+	/*padding: .4rem 0;*/
+	overflow: hidden;
+	background-color: #fff;
+	border: 1px solid #bbb;
+	border-radius: .8rem;
+	text-align: center;
+	max-width: 750px;
+}
+.dialog span {
+	min-height: 4rem;
+	line-height: 2rem;
+	font-size: 1.4rem;
+}
+/*add by fang 对话框标题*/
+.dialog-title {
+	width: 100%;
+	background-color: #41546e;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	font-size: 1.2rem;
+	color: #ffffff;
+	text-align: left;
+	text-indent: 1rem;
+}
+
+.dialog-btn {
+	background-color: #0c6cff;
+	width: 33%;
+	text-align: center;
+	color: #ffffff;
+	font-size: 18px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	margin-top: 20px;
+	display: inline-table;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin-left: 10%;
+	margin-right: 14%;
+	margin-bottom: 4%;
+}
+
+.dialog-btn-m {
+	/*position: absolute;*/
+	position: relative;
+	margin-top:10px;
+	bottom: .4rem;
+	left: 35%;
+	width: 30%;
+	height: 2rem;
+	line-height: 2rem;
+	border-radius: .5rem;
+	background-color: #0c6cff;
+	color: #fff;
+}
+/* 下划线 */
+.underline {
+	border-bottom: 1px solid #0c6cff;
+}
+/* 视图面板 */
+.page-panel {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	overflow: hidden;
+}
+/* 导航栏 */
+.navigation-bar {
+	z-index: 50;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: #2b3849;
+	color: #fff;
+	text-align: center;
+}
+.navigation-bar h1 {
+	display: inline-block;
+	width: 70%;
+	font-size: 1.4rem;
+	font-weight: normal;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.navigation-bar .bar-btn-l {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 3rem;
+	height: 3rem;
+	font-size: 1.4rem;
+	color: #fff;
+}
+.navigation-bar .bar-btn-r {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: 3rem;
+	font-size: 1.4rem;
+	color: #fff;
+}
+/* 信息栏 */
+.page-container {
+	position: absolute;
+	top: 3rem;
+	left: 0;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+/* 工具栏 */
+.tool-bar {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+	box-align: center;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-o-box-align: center;
+	width: 100%;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: #fff;
+}
+/* 信息栏分组Tab页签 */
+.tab-bar {
+	position: absolute;
+	top: 3rem;
+	left: 0;
+	width: 100%;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	background-color: #e8ecee;
+}
+.tabbar-list {
+	height: inherit;
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+}
+.tabbar-item {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	text-align: center;
+	color: #000;
+}
+.tabbar-item:not(:last-child) {
+	border-right: 1px solid #cfd9df;
+}
+.tabbar-item.selected {
+	background-color: #fff;
+}
+/* 搜索栏 */
+.search-field {
+	position: relative;
+	margin: .6rem 1.2rem;
+	height: 2rem;
+	line-height: 2rem;
+}
+.search-field input,
+.search-field input:focus {
+	width: 100%;
+	height: inherit;
+	text-indent: .4rem;
+	border: 1px solid #cfd9df;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+}
+.search-field .search-icon {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 2rem;
+	height: 2rem;
+	color: #cfd9df;
+	font-size: 1.2rem;
+	text-align: center;
+}
+/* 视图遮罩，计划用于通用型图层 */
+.screen-mask {
+	z-index: 1000;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.4);
+}
+.screen-mask1 {
+	z-index: 1000;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.4);
+}
+/* 居右筛选菜单图层 */
+.filter-panel1 {
+	position: inherit;
+	width: 100%;
+}
+.filter-panel {
+	position: absolute;
+	top: 0;
+	left: 100%;
+	width: 75%;
+	height: inherit;
+	background-color: #fff;
+	transition: left 300ms;
+	-moz-transition: left 300ms; /* Firefox 4 */
+	-webkit-transition: left 300ms; /* Safari & Chrome */
+	-o-transition: left 300ms; /* Opera */
+	-ms-transition: left 300ms; /* IE 9+ */
+}
+/* 图层元素容器 */
+.spinner-layout .container,
+.page-container .context,
+.filter-leftside .container,
+.filter-panel .container {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	overflow: hidden;
+}
+/* 右侧筛选菜单图层顶部右侧控件 */
+.filter-btn-r {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: 3rem;
+	line-height: 3rem;
+	font-size: 1.4rem;
+	text-indent: 0;
+	text-align: center;
+	color: #fff;
+}
+.filter-btn-r1 {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 5rem;
+	height: 5rem;
+	line-height: 3rem;
+	font-size: 1.4rem;
+	text-indent: 0;
+	text-align: center;
+	color: #fff;
+}
+/* 右侧筛选菜单图层页顶容器 */
+.filter-header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: inherit;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: #0c6cff;
+	color: #fff;
+	text-indent: .8rem;
+}
+/* 右侧筛选菜单图层List容器 */
+.filter-list {
+	position: absolute;
+	top: 3rem;
+	left: 0;
+	width: inherit;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+/* 右侧筛选菜单图层List元素容器 */
+.filter-list li {
+	position: relative;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	margin: 0 .8rem;
+	height: 3rem;
+	line-height: 3rem;
+	border-bottom: 1px solid #e4e9ec;
+}
+.filter-list li .icon-r {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: inherit;
+	text-align: center;
+	color: #e4e9ec;
+}
+/* 居右筛选菜单左侧留空图层 */
+.filter-leftside {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 25%;
+	height: inherit;
+	background-color: transparent;
+	color: #fff;
+	text-align: center;
+}
+/* 居中文本，要求父元素position属性是relative */
+.center-txt {
+	position: absolute;
+	top: 50%;
+	left: 0;
+	width: inherit;
+	height: 2rem;
+	line-height: 2rem;
+	margin-top: -1rem;
+	text-align: center;
+	font-size: .8rem;
+}
+.filestate{
+	font-size: 2rem;
+}
+/* 矩形 */
+.f-rectangle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-style: solid;
+	background-color: #fff;
+}
+/* 圆形 */
+.f-circle {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 50%;
+	background-color: #fff;
+}
+/* 把图形作为容器 */
+.f-inner-c {
+	position: relative;
+	width: inherit;
+	height: inherit;
+	line-height: inherit;
+}
+/* 勾形 */
+.f-check {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-style: solid;
+	border-width: 0 0 2px 2px;
+	border-bottom-left-radius: 2px;
+	transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	-ms-transition: rotate(-45deg);
+	background-color: #fff;
+}

@@ -1,0 +1,1665 @@
+<%=include('conf.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/base.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/handledetail.js"></script>
+	<title>公文-详情</title>
+	<style>
+		.unit-title{
+			display: inline-block;
+			width: 40%;
+			vertical-align: middle;
+		}
+		.unit-text{
+			display: inline-block;
+			width: 60%;
+			vertical-align: middle;
+			word-break: break-all;
+		}
+		.content-unit{
+			padding: 7px 11px;
+			margin: 2% 0;
+			background-color: #fafafa;
+			border-bottom: 1px solid #ddd;
+			border-top-left-radius: 3px;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+			border-left: 3px solid #fc5253;
+			box-shadow: 1px 2px 1px #ddd;
+		}
+		.content-comment{
+			padding: 7px 11px;
+			color: #1A5156;
+		}
+		.doc-nav{
+			height: 100%;
+		}
+		.doc-nav>li{
+			display: block;
+			float:left;
+			width: 25%;
+			height: 100%;
+			text-align: center; 	
+			line-height: 48px;
+			background-color: #E2E2E2;
+			color: #1A5156;
+			font-size: 20px;
+			outline: 1px #A0A0A0 solid;
+		}
+		.doc-nav>li.on{
+			background-color: #fff;
+		}
+		.submit-btn{
+			height: 100%;
+			text-align: center;
+			font-size: 20px;
+			color: #fff;
+			line-height: 48px;
+			background-color: #0c6cff;
+		}
+		/*意见的样式start--cy*/
+		#top_search{
+			width:94%;
+			height:45px;
+			margin-top:10px;
+			margin-left:3%;
+			border: 1px solid #e4e4e4;
+			border-radius: 10px;
+			overflow: hidden;
+			box-shadow: inset 0 -2px 5px rgba(0,0,0,.3);
+		}
+		#searchText{
+			width: 80%;
+			float: left;
+			height: 90%;
+			line-height: 90%;
+			outline: none;
+			padding-left: 15px;
+			background-color: #fafafa;
+			border: 1px solid #e4e4e4;
+			color: #41546e;
+			box-shadow: 0 0 10px #e4e4e4 inset;
+		}
+		#serachspan{
+			display:inherit;
+			width:13%;
+			height:45px;
+			float:left;
+			text-align:center;
+			border-left: 1px solid #d5d5d5;
+		}
+		#searchImg{
+			width:28px;
+			height:28px;
+			margin-top:8px;
+		}
+		
+		.top_text{
+			position:relative;
+			width: 100%;
+			background-color: #e8ecee;
+			font-size: 1.2rem;
+			font-family: "微软雅黑";
+			height:auto;
+			vertical-align:middle;
+			margin-top:10px;
+			border-top: 1px solid #ddd1;
+		}
+		.left_span{
+			height: 100%;
+			width: 4px;
+			position:absolute;
+			background-color: #fc5253;
+			top:0;
+			left: 0;
+			bottom: 0;
+		}
+		.userMsg{
+			padding-bottom: 10px;
+		}
+		.top_text p,.opinion_content p{
+			color:#7491BD;
+			margin-left:4%;
+			height:auto;
+			padding-top:10px;
+			font-family: "微软雅黑";
+		}
+		.opinion_content{
+			border-bottom: 1px solid #ddd;
+		}
+		.opiniontext{
+			width: 94%;
+			border: 1px solid #cfd9df;
+			position: relative;
+			margin-bottom: 15px;
+			border-radius: 2px;
+			font-family: "微软雅黑";
+			margin-left:3%;
+			margin-top: 5px;
+		}
+		.opiniontext-n{
+			width: 10px;
+			height: 10px;
+			border-top: 1px solid #cfd9df;
+			border-left: 1px solid #cfd9df;
+			position: absolute;
+			left: 16px;
+			transform: rotate(45deg);
+			-webkit-transform: rotate(45deg);
+			top: -6px;
+			background-color: #ffffff;
+		}
+		.opinioncontent{
+			word-wrap:break-word;
+			height:auto;
+			white-space:normal;
+			margin-bottom:10px;
+		}
+		.alive {
+			background-color: #fee0e0;
+			border-color: #ffb6b6;
+		}
+		/*意见的样式end--cy*/
+		.attachlist{
+			padding: 3px 7px;
+			color: #27858E;
+		}
+		.attachitem {
+			display: block;
+			/* height: 30px; */
+			/* width: 100%; */
+			padding: 17px 70px;
+			/* line-height: 30px; */
+			position: relative;
+			/* border-bottom: 1px #ccc solid; */
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			box-shadow: 0 0 3px #ccc;
+			margin: 7px 0;
+		}
+		.attachtype {
+			position: absolute;
+			top: 50%;
+			margin-top: -16px;
+			left: 10px;
+			border: 2px solid blue;
+			/* height: 16px; */
+			/* line-height: 16px; */
+			/* padding: 3px; */
+			color: blue;
+			/* margin: 4px	0; */
+			border-radius: 2px;
+			padding: 3px;
+		}
+		.xls {
+			color: #0CE40C;
+			border: 2px solid #0CE40C;
+		}
+		.ppt {
+			color: #FF8D00;
+			border: 2px solid #FF8D00;
+		}
+		.attachitem:after{
+			content: '';
+			position: absolute;
+			color: #0c6cff;
+			right: 17px;
+			display: block;
+			top: 50%;
+			margin-top: -5px;
+			display: block;
+			width: 10px;
+			height: 10px;
+			border-top: 2px #555 solid; 
+			border-right: 2px #555 solid;
+			transform:rotate(45deg);
+			-ms-transform:rotate(45deg); /* IE 9 */
+			-moz-transform:rotate(45deg); /* Firefox */
+			-webkit-transform:rotate(45deg); /* Safari and Chrome */
+			-o-transform:rotate(45deg); /* Opera */
+		}
+		.attachitem span {
+			color: #0c6cff;
+			margin-left: 6px;
+		}
+		/*流程跟踪cy*/
+		.inner{
+			margin-top: 14px;
+			margin-left: 14px;
+		}
+		.inner hr{
+			border:1px solid #ffffff;
+			width:20px;
+			margin-top:6px;
+		}
+		.processbox{
+			position: absolute;
+			width: 100%;
+			z-index: 12;
+		}
+		.boxcontent{
+			height: 48px;
+			background-color:#fff;
+			text-indent: 20px;
+			line-height: 48px;
+		}
+		.boxcontent a{
+			text-decoration: none;
+			color: #000;
+			font-size: 14px;
+		}
+		.shadow{
+			position:fixed;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.298039);
+			z-index: 11;
+		}
+		.dsn-page-content{
+			z-index: 5;
+		}
+		li.detail-tips {
+			padding: 11px 20px;
+			color: #7491BD;
+			font-size: larger;
+		}
+		/*生成编号样式*/
+		#numbercontent{
+			position: fixed;
+			top: 35%;
+			z-index: 12;
+			width: 75%;
+			left: 10%;
+			border:1px solid #000;
+			background-color: #fff;
+		}
+		.dialog1{
+			text-align: center;
+		}
+		.dialog-title1 {
+			width: 100%;
+			background-color: #41546e;
+			height: 2.4rem;
+			line-height: 2.4rem;
+			font-size: 1.2rem;
+			color: #ffffff;
+			text-align: left;
+			text-indent: 1rem;
+		}
+		.dialog1 table {
+			width: 80%;
+			margin: 0px auto;
+		}
+		.loginout-btn {
+			width: 30%;
+			text-align: center;
+			color: #ffffff;
+			font-size: 16px;
+			padding-top: 5px;
+			padding-bottom: 5px;
+			margin-top: 16px;
+			display: inline-table;
+			border-radius: 4px;
+			-webkit-border-radius: 4px;
+			margin-left: 11%;
+			margin-bottom: 4%;
+			background-color: #0c6cff;
+		}
+		.dialog-layout1 select {
+			width: 80%;
+		}
+
+		.dialog-layout1 input {
+			width: 76%;
+		}
+		/*产品表格的样式--cy*/
+		.producttable{
+			overflow: auto;
+			width: 95%;
+		}
+		#childrenTable1{
+			border:1px solid #1A5156;
+			margin-top:3%;
+		}
+		#childrenTable1 td{
+			border:1px solid #1A5156;
+		}
+		#childrenTable1 tr{
+			border:1px solid #1A5156;
+		}
+		/* 伪装input */
+		.content-unit input{
+			border: none;
+			outline: none;
+			background-color: #fafafa;
+			text-align: right;
+		}
+		/* 处理单表格样式 */
+		table{
+			width: 100%;
+		}
+		tbody{
+			text-align: left;
+			font-size: 14px;
+		}
+		span.requiredFlgControl{
+			display: none;
+		}
+		input.digits{
+			width: 30px;
+			border: none;
+			outline: none;
+			text-align: right;
+			background-color: #fff;
+		}
+		tr{
+			display: inline-block;
+			width: 100%;
+			line-height: 40px;
+			border-bottom: 1px solid #ddd;
+		}
+		td.commentName{
+			display: inline-block;
+			text-align: left;
+			width: 85%;
+			line-height: 40px;
+			vertical-align: middle;
+			text-align: left;
+			word-break:keep-all;           
+			white-space:nowrap;          
+			overflow:hidden;              
+			text-overflow:ellipsis;
+		}
+		td.commentContent {
+			text-align: right;
+			width: 15%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		.thead{
+			display: inline-block;
+			width: 100%;
+			font-size: 15px;
+			word-break:keep-all;           
+			white-space:nowrap;          
+			overflow:hidden;               
+			text-overflow:ellipsis;
+		}
+		.thead .unit-title{
+			width: 100%;
+		}
+		.formp{
+			text-align: left;
+			font-size: 14px;
+		}
+		.formp p{
+			text-align: right;
+		}
+	</style>
+</head>
+<body>
+	<div id="panle">
+		<div class="dsn-page-header">
+			<h4 class="center">公文详情</h4>
+			<a class="go-back fa fa-arrow-left"> </a>
+			<a class="go-home fa fa-navicon"> </a>
+		</div>
+		<!--流程跟踪cy -->
+		<div class="processbox" style="display:none;">
+			<div class="boxcontent" id="processPath"><a>流程跟踪</a></div>
+			<div class="boxcontent" id="createNum" style="display: none;"><a>生成编号</a></div>
+			<div class="shadow"> </div>
+		</div>
+		<!--流程跟踪cy end-->
+		<!-- 导航条 -->
+		<div class="dsn-page-nav">
+			<ul class="doc-nav">
+				<li id="comment" class="on">处理单</li>
+				<li id="opinion">意见</li>
+				<li id="detail">正文</li>
+				<li id="attachment">附件</li>
+			</ul>
+		</div>
+		<!--生成编号-->
+		<div id="numbercontent" style="display: none;">
+			
+		</div>
+		<!--处理单、意见、正文、附件框 -->
+		<div class="dsn-page-content">
+			<!-- 处理单context -->
+			<div class="content-comment"> </div>
+			<!-- 意见context -->
+			<div class="content-opinion loading"> </div>
+			<!-- 正文context -->
+			<div class="content-detail loading"> </div>
+			<!-- 附件context -->
+			<div class="content-attachment loading"> </div>
+		</div>
+		<!-- 底部，提交，页底导航 -->
+		<div class="dsn-page-footer">
+			<div class="submit-btn">提交</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var root = '<%=ROOTURL%>',
+		tailor = '<%=TAILOR_BASE_URL%>',
+		root_dm = '<%=ROOTURL_DM%>';
+
+		//  start----cy
+		var PARAM_SEPARATOR = ";", KEY_VALUE_SEPARATOR = "=";
+		var htmlhead = window.location.href;//当前页面的地址
+		var commentHtml = "", opinionHtml = "", detailHtml = "",attachmentHtml = "";
+		var resourceUrl = '<%=LOCAL_RESOURCE_URL%>';//资源地址
+		var urlvalue = window.location.search;
+		if (urlvalue) {
+			var pageaid = urlvalue.split("pageaid=")[1];
+		};
+		pageaid = parseInt(pageaid);
+		var opinionData1, opinionData2;//意见json的全局变量
+		var contextRoot = "";
+		if (htmlhead.indexOf(root) != -1) {
+			contextRoot = root;
+		}else{
+			contextRoot = root_dm;
+		}
+		var branchExamineEditFileFlg = "";
+		var branchInstitution = "";
+		var rootNextStr = "cmdi-workflow-dm", rootNext2Str = "";
+		var urlarr = htmlhead.split("/");
+		for (var i=0; i < urlarr.length; i++) {
+			if(urlarr[i].match(/cmdi-workflow-/)){
+				rootNextStr = urlarr[i].replace("View-choicePerson=","");
+				rootNext2Str = urlarr[i+1];
+			}
+		};
+		//end ----cy
+
+		//初始化 DeptNotify
+		function initDeptNotifyInfo(){
+			// var deptNotifyFlg = getStateBizParameter('deptNotify');
+			var stateBizParameters = $('#stateBizParameters').val();
+			if(stateBizParameters&&stateBizParameters.indexOf('deptNotify=')!=-1){
+				var deptNotifyFlg = stateBizParameters && stateBizParameters.split('deptNotify=')[1].split(';')[0] || '';
+			}else{
+				var deptNotifyFlg = 'false';
+			}
+			if('true' == deptNotifyFlg){
+				var varUrl = tailor + root + 'Tailor-Api-deptnotify-cmdi-workflow-dm/colleReceiveIns/examineEditFile.action';
+				var bizCode = $('#bizCode').val();
+				var bizId = $('#bizId').val();
+				$.ajax({
+					url:varUrl,
+					data:{bizCode:bizCode,bizId:bizId},
+					error: function(data){
+						alert("出错了!!!");
+					}, 
+					success: function(data) { 
+						if(!data.isExit){
+							$('#deptNotifyInput').val('false');
+						}else{
+							$('#deptNotifyInput').val('true');
+						}
+					},
+					timeout:30000,
+					type:'POST',
+					dataType:'json'
+				});
+			}
+			var cancelDeptNotifyInfoValidate = 'noticeform_editword,noticeformpart_editword';
+			var varBizCode = $('#bizCode').val();
+			if(cancelDeptNotifyInfoValidate.indexOf(varBizCode) >= 0){
+				$('#deptNotifyInput').val('true');
+			}
+		}
+		// 构建公文提交表单
+		function createDocumentSubmitHtml(data){
+			var icon = "/" +rootNextStr;
+			var form = $('<form>').hide();			
+			form.attr({
+				action : tailor+data.url.replace(icon,'/TailorApi-verify-'+rootNextStr),
+				method : 'post'
+			});
+			for(x in data.postdata){
+				var input = $('<input type="hidden">');
+				input.attr({
+					name : x,
+					value : data.postdata[x],
+					id : x
+				}).appendTo(form);
+			}
+			form.appendTo('body');
+			initDeptNotifyInfo();
+		}
+		// 构建处理单html片段
+		function createCommentHtml(data,table){
+			var infoNum = data.length;
+			var applyid = parseInt(data[infoNum-2].applyId);
+			var titles = data[infoNum-1];
+			var url = "cmdi-workflow-pm/purchase/getPurchaseProjectInfo.action";
+			var urlpath = tailor + root + "getTableInfo=" + url;
+			var parentel = $('.content-comment');
+			if (applyid) {
+				$.ajax({
+					url:urlpath,
+					type:'POST',
+					dataType:'json',
+					data:{projectSid:501},
+					async:false,
+					success:function(data){
+						if(jQuery.isEmptyObject(titles)){		// xg lm 
+								for (var i=0; i < titles.length; i++) {
+									var unit = $('<div class="content-unit">');
+									var name = titles[i].name;
+									var values = getMatchValue(data.data.data,name);
+									if(values){
+										unit.append($('<div class="unit-title">').html(titles[i].title),$('<div class="unit-text">').html(values)).appendTo(parentel);
+									}else{
+										unit.append($('<div class="unit-title" style="width:98%">').html(titles[i].title)).appendTo(parentel);
+									}
+								};
+						}				
+					},
+					error:function(){
+						console.log("没有找到该action");
+					}
+				});
+			};
+			for(i=0;i<infoNum;i++){
+				var unit = $('<div class="content-unit">');
+				//去除温馨提示这一行---cy
+				if (data[i].title.match(/温馨提示/) || data[i].title.match(/注意：/)) {
+					data[i].title = "";data[i].text = "";
+				};
+				if(data[i].text){
+					unit.append($('<div class="unit-title">').html(data[i].title),$('<div class="unit-text">').html(data[i].text)).appendTo(parentel);	
+				}else{
+					if (data[i].title!="") unit.append($('<div class="unit-title" style="width:98%;">').html(data[i].title)).appendTo(parentel);
+				}
+			}
+			//xg --cy--start
+			if (table.isHave) {
+				if (table.url && table.url!="") {
+					getTableContent(table.url,parentel);
+				}
+				if (table.data && table.data.length > 0 && (!table.url || table.url=="")) {
+					var infoNum = table.data.length;
+					for (var i=0; i < infoNum; i++) {
+						var unit = $('<div class="content-unit">');
+					  	var adata = table.data[i];
+						if(adata.text){
+							unit.append($('<div class="unit-title">').html(adata.title),$('<div class="unit-text">').html(adata.text)).appendTo(parentel);	
+						}else{
+							unit.append($('<div class="unit-title" style="width:98%;">').html(adata.title)).appendTo(parentel);
+						}
+					};
+				};
+			};
+			//end--cy
+			commentHtml = $('.content-comment').html();
+		}
+		//匹配返回的值
+		function getMatchValue(data,name){
+			var values = "";
+			if(name == "projectName"){
+				values = data.projectName;
+			}else if(name == "projectType"){
+				values = data.projectType;
+			}else if(name == "projectCode"){
+				values = data.projectCode;
+			}else if(name == "draftUserName"){
+				values = data.draftUserName;
+			}else if(name == "draftOrgName"){
+				values = data.draftOrgName;
+			}else if(name == "draftTime"){
+				values = data.draftTime;
+			}else if(name == "budgetAccount"){
+				values = data.budgetAccount;
+			}else if(name == "budgetAmount"){
+				values = data.budgetAmount;
+			}else if(name == "expenditureType"){
+				values = data.expenditureType;
+			}else if(name == "demandDepartment"){
+				values = data.demandDepartment;
+			}else if(name == "purchaseType"){
+				values = data.purchaseType;
+			}else if(name == "decisionForm"){
+				values = data.decisionForm;
+			}else if(name == "requirementDescription"){
+				values = data.requirementDescription;
+			}else{}
+			return values;
+		}
+		//得到处理单多余表格中的内容
+		function getTableContent(url,parentel){
+			var urlpath = tailor + contextRoot + "RENLI-Resource-" + rootNextStr + "/" + rootNext2Str + "/" + url;
+			$.ajax({
+				url:urlpath,
+				type:'get',
+				dataType:'json',
+				success:function(data){
+					if (!data.success) {
+						showLogoutDialog(data.message);
+					}else{
+						var data = data.data;
+						var infoNum = data.length;
+						for(i=0;i<infoNum;i++){
+							var unit = $('<div class="content-unit">');
+							if(data[i].text){
+								unit.append($('<div class="unit-title">').html(data[i].title),$('<div class="unit-text">').html(data[i].text)).appendTo(parentel);	
+							}else{
+								unit.append($('<div class="unit-title" style="width:98%;">').html(data[i].title)).appendTo(parentel);
+							}
+						}
+					}
+				},
+				error:function(e){
+					throw(e);
+				}
+			});
+		}
+		//构建附件html片段
+		function uploadAttachmentHtml(url){
+			var urlPath = tailor + root + url;
+			var postdata = JSON.parse('{"_search":"false","nd":"'+$.now()+'","rows":"100","page":"1","sidx":"createDate","sord":"asc"}');
+			//showLoadingMask();-----cy
+			if (pageaid == 7) {
+				$.ajax({
+					url : urlPath,
+					type : 'post',
+					data : postdata,//xg--cy
+					timeout : 30000,
+					async:false,
+					dataType : 'json',
+					success : function(data){
+						hideLoadingMask();						
+						var attachRows = data.data.rows;
+						var downloadroot = '/cmdi-workflow-pm/upload/downloadFiles.action?id=';
+						var attachlist = $('<div class="attachlist">');
+						if(attachRows.length>0){
+							for (var i = 0; i < attachRows.length; i++) {
+								var fileContentType = dealAttachmentType(attachRows[i].fileContentType);
+								var attachitem = $('<li class="attachitem">').click(function(){
+									var url = $(this).attr('url');
+									var urlpath = tailor + contextRoot + "$FILE-" + url.replace('/','');
+									var slidein = new SlippageLoad({
+										url:urlpath
+									});
+								});;
+								var attachtype = $('<div class="attachtype">');
+								var attachload = $('<span>');
+								attachitem.text(attachRows[i].fileName);
+								attachitem.attr('url',downloadroot+attachRows[i].id).click(function(){
+									//alert($(this).attr('url'));
+								});
+								attachtype.text(fileContentType.toUpperCase());
+								attachtype.addClass(fileContentType);
+								/*attachload.text('查看').click(function(){
+									alert($(this).parents('li').attr('url'));
+								});*/
+								attachitem.append(attachtype);
+								attachlist.append(attachitem);
+							}
+						}else{
+							var attachitem = $('<li class="attachitem">');
+							attachitem.text('此公文没有附件');
+							attachlist.append(attachitem);
+						}
+						
+						$('.content-attachment').append(attachlist);
+						attachmentHtml = $('.content-attachment').html();//-----cy
+					},
+					error : function(e){
+						hideLoadingMask();
+						throw(e);
+					}
+				});
+			} else{
+				$.ajax({
+					url : urlPath,
+					type : 'post',
+					timeout : 30000,
+					data : postdata,
+					async:false,
+					dataType : 'json',
+					success : function(data){
+						hideLoadingMask();
+						
+						var attachRows = data.data.rows;
+						console.log(data);
+						/*console.log(attachRows.length);*/
+						var downloadroot = '/cmdi-workflow-dm/upload/downloadFiles.action?id=';
+						var attachlist = $('<div class="attachlist">');
+
+						if(attachRows.length>0){
+							for (var i = 0; i < attachRows.length; i++) {
+								var fileContentType = dealAttachmentType(attachRows[i].fileContentType);
+								var attachitem = $('<li class="attachitem">').click(function(){
+									var url = $(this).attr('url');
+									var urlpath = tailor + contextRoot + "$FILE-" + url.replace('/','');
+									var slidein = new SlippageLoad({
+										url:urlpath
+									});
+								});
+								var attachtype = $('<div class="attachtype">');
+								var attachload = $('<span>');
+								attachitem.text(attachRows[i].fileName);
+								attachitem.attr('url',downloadroot+attachRows[i].id).click(function(){
+									//alert($(this).attr('url'));
+								});
+								attachtype.text(fileContentType.toUpperCase());
+								attachtype.addClass(fileContentType);
+								/*attachload.text('查看').click(function(){
+									alert($(this).parents('li').attr('url'));
+								});*/
+								attachitem.append(attachtype);
+								attachlist.append(attachitem);
+							}
+						}else{
+							var attachitem = $('<li class="attachitem">');
+							attachitem.text('此公文没有附件');
+							attachlist.append(attachitem);
+						}
+						
+						$('.content-attachment').append(attachlist);
+						attachmentHtml = $('.content-attachment').html();//-----cy
+					},
+					error : function(e){
+						hideLoadingMask();
+						throw(e);
+					}
+				});
+			};
+			
+		}
+		//生成编号框  cy
+		function uploadNumberHref(data,contextRoot){
+			var ishave = data.ishave;
+			var datas = data.data;
+			/*if (ishave) {//显示生成编号链接
+				$('#createNum').attr("style","display:block;");
+			};*/
+			contextRoot = contextRoot.replace("cmdi-workflow","Create-Number=cmdi-workflow");
+			var url = tailor + contextRoot + "/publicNumber/generateNumber.action?orgId="+datas.orgId+"&bizCode="+datas.bizCode+"&currentStep=" + datas.currentStep + "&currentValue=" + datas.serialNumber +"&fileNameId="+datas.fileWordNumber +"&year=" + datas.particularYear + "&processInstanceId=" + datas.processInstanceId;
+			$('#createNum').attr("title",url);
+		}
+		//得到生成编号页面
+		function getNumBox(){
+			showLoadingMask();
+			var url = $('#createNum').attr("title");
+			$.ajax({
+				url:url,
+				type:'get',
+				dataType:'json',
+				success:function(data){
+					if (data.success) {
+						hideLoadingMask();
+						console.log(data);
+						var numbercontent = $('#numbercontent');
+						numbercontent.attr('tablevalue',data.data.tablevalue);
+						createNumBox(data.data.tabledatas);
+					}else{
+						console.log(";;;;;;;;;;;;;;;;;;;");
+					};
+				},
+				error:function(e){
+					throw(e);
+				}
+			});
+		}
+		//创建生成编号弹出框
+		function createNumBox(data){
+			var infoNum = data.length;
+			var html = '<div class="dialog-layout1"><div class="dialog1"><p class="dialog-title1">生成编号</p>';
+			html += '<table style="width:80%"><tbody>';
+			for (var i=0; i < infoNum; i++) {
+				if (data[i].isshow) {
+					html += "<tr><td>" + data[i].title + "</td>";
+					html += "<td>" + data[i].value + "</td></tr>";
+				}else{
+					html += "<tr style='display:none;'><td>" + data[i].title + "</td>";
+					html += "<td>" + data[i].value + "</td></tr>";
+				};
+			};
+			html += '</table>';
+			html += '<div><div class="loginout-btn" onclick="suregetNumber()">确定</div><div class="loginout-btn" onclick="nogetNumber()">取消</div></div></div></div>';
+			$('#numbercontent').html(html);
+			$('.shadow').click();
+			$('#numbercontent').attr("style","display:block");
+			var datas = $('#numbercontent').attr("data");
+			datas = JSON.parse(datas);
+			var fileNameId = datas.fileWordNumber;
+			$("#fileNameid").find("option").each(function() {
+				if (this.value == fileNameId) {
+					this.selected = true;
+				}
+			});
+		}
+		//得到对应文件字的编号
+		function ajaxGetValue() {
+			var titles = $('#createNum').attr('title').split('&');
+			for (var i=0; i < titles.length; i++) {
+				if (titles[i].indexOf('bizCode') != -1) {
+					var bizCode = titles[i].split("=")[1];
+				};
+				if (titles[i].indexOf('fileNameid') != -1) {
+					var fileNameId = titles[i].split("=")[1];
+				};
+				if (titles[i].indexOf('year') != -1) {
+					var year = titles[i].split("=")[1];
+				};
+			};
+			var contextRoot = $('#numbercontent').attr('title');
+			contextRoot = contextRoot.replace("cmdi-workflow","generateNumberAjax=cmdi-workflow");
+			var url = tailor + contextRoot + '/publicNumber/generateNumberAjax.action';
+
+			//正文编辑
+			var fileNameSelected = $('#fileNameid option:selected').text();
+			var fileNameId1 = $('#fileNameid option:selected').val();
+			jQuery.ajax({
+				url:url,
+				type:'post',
+				dataType:'json',
+				timeout : 10000,
+				async:true, //设置同步调用
+				data:{bizCode:bizCode, fileNameId:fileNameId1, year:year},
+				success:function(data){
+					var value = data.data.data;
+					$("#seqValue").val(value);
+				},
+				error:function(data){
+					showMessageDialog("get currenValue is failed");
+				}			
+			});
+		}
+
+		//确认提交
+		function suregetNumber(){
+			nogetNumber();
+			showLoadingMask();
+			var datas = $('#numbercontent').attr("data");
+			datas = JSON.parse(datas);
+			var tablevalue = $('#numbercontent').attr("tablevalue");
+			var fileNameid = $("#fileNameid").val();
+			var year = $("#year").val();
+			var seqValue = $("#seqValue").val();
+			var fileNameId = datas.fileWordNumber;
+			var referencenumber = datas.referencenumber;
+			if (seqValue == tablevalue && referencenumber != "" && fileNameid == fileNameId) {
+				nogetNumber();
+				return true;
+			};
+			// 如果没有填写编号
+			if (seqValue.length == 0) {
+				showMessageDialog("请填写流水号");
+				return false;
+			}
+			isUsedValue(fileNameid, year, seqValue, datas);
+
+		}
+		//确定该编号是否被人使用
+		function isUsedValue(fileNameid,year,seqvalue,datas){
+			var isUserd = false;
+			var valiCode = datas.valiCode;
+			var valiBol = datas.valiBol;
+			var valiParam = datas.valiParam;
+			valiBizCode = datas.valiBizCode;
+			var particularYear = year;
+			var fileWord = datas.fileWord;
+			var serialNumber = seqValue;
+			var fileWordNumber = fileNameid;
+			var domainId = datas.domainId;
+			var contextRoot = $('#numbercontent').attr('title').replace('cmdi-workflow','IsUsed=cmdi-workflow');
+			var varUrl = tailor + contextRoot+"/colleRec/validateFormCode.action?fileWordNumber="+fileWordNumber+"&particularYear="+particularYear+"&serialNumber="+serialNumber;
+			$.ajax({
+				url:varUrl,
+				data:{valiCode:valiCode,valiBizCode:valiBizCode,valiBol:valiBol,valiParam:valiParam,domainId:domainId,fileWord:fileWord},
+				timeout:60000,
+				async:true, //设置同步调用
+				type:'POST',
+				dataType:'json',
+				success: function(data) {
+					if(data.success){// 可以使用
+						isUsed = "false";
+						updateCurrentNumberValue(fileNameid,year,seqvalue,datas);
+					}else{// 不可以使用
+						hideLoadingMask();
+						showMessageDialog("编号在系统中已存在");
+						isUsed = "true";
+					}
+				},
+				error:function(){
+					hideLoadingMask();
+					showMessageDialog("连接失败");
+				}
+			});
+		}
+		//上传编号
+		function updateCurrentNumberValue(fileNameid,year,seqvalue,datas){
+			var bizCode = datas.bizCode;
+			var filenameid = fileNameid;
+			var year = year;
+			var seqValue = seqvalue;
+			var contextRoot = $('#numbercontent').attr('title').replace('cmdi-workflow','updateCurrentNumberValue=cmdi-workflow');
+			var url = tailor + contextRoot + '/publicNumber/updateCurrentNumberValue.action';
+			$.ajax({
+				url:url,
+				type:'post',
+				dataType:'json',
+				timeout : 10000,
+				async:true, //设置同步调用
+				data:{bizCode:bizCode, fileNameId:filenameid, year:year, currentValue:seqValue},
+				success:function(data){
+					if(data.success){// 上传成功
+						var seqnumber = data.data.data;
+						setNumberValues(seqnumber.currentSeqValueStr, seqnumber.filetypeName, seqnumber.filetypeId, seqnumber.seqYear, seqnumber.seqValue);
+					}else{
+						hideLoadingMask();
+						showMessageDialog("上传编号失败");
+					}
+				},
+				error:function(data){
+					hideLoadingMask();
+					showMessageDialog("update currenValue is failed");
+				}	
+			});
+		}
+		//在本页面设置点击确定成功生成的编号fileNameStr fileName fileId fileyear
+		function setNumberValues(valueStr, fileName, fileId, year, value){
+			var form = $("form:first");
+			$("#fileNameStr").val(valueStr);
+			$("#fileName").val(fileName);
+			$("#fileId").val(fileId);
+			$("#fileyear").val(year);
+			$("#filevalue").val(value);
+			var id = $('#numbercontent').attr('idname');
+			document.getElementById(id).value=valueStr;
+			document.getElementById("particularYear").value = year;
+			document.getElementById("fileWord").value = fileName;
+			document.getElementById("fileWordNumber").value = fileId;
+			document.getElementById("serialNumber").value = value;
+			//showMessageDialog("已生成编号");
+			//处理单出现问号
+			var comments = document.getElementsByClassName("unit-title");
+			var infonum = comments.length;
+			for (var i=0; i < infonum; i++) {
+				var divtitle = comments[i];
+				if (divtitle.innerText.match(/文.*号/)) {
+					var divtext = divtitle.nextSibling;
+					divtext.innerHTML = valueStr;
+				};
+			};
+			var submiturl = $('#numbercontent').attr('submit');
+			var titles = htmlhead.split("/");
+			for(var i=0; i < titles.length; i++){
+				if(titles[i].match(/cmdi-workflow-dm/) || titles[i].match(/cmdi-workflow-pm/)){
+					var beforetitle = titles[i+1];
+				}
+			}
+			var action = tailor + contextRoot + "TailorApi-formsubmit-cmdi-workflow-dm/" + beforetitle + "/" + submiturl;
+			var form = $('form:first');
+			submitFormforNumber(form,action);
+		}
+		//生成编号成功，提交form表单，刷新公文页面
+		function submitFormforNumber(obj,url){
+			if (obj) {
+				$.ajax({
+					url : url,
+					type : 'post',
+					dataType : 'json',
+					timeout : 10000,
+					async : true, //设置同步调用
+					data : obj.serialize(),
+					success : function(data){
+						hideLoadingMask();
+						if (!data.success || !data.data.match(/ok/)) {
+							showMessageDialog("网络失败");
+						}
+					},
+					error : function(e){
+						throw(e);
+						hideLoadingMask();
+						showMessageDialog("生成编号失败");
+					}
+				});
+			}
+		}
+		//取消提交
+		function nogetNumber(){
+			$("#numbercontent").attr("style","display:none;");
+		}
+		//处理附件类型
+		function dealAttachmentType(type){
+			switch(type){
+				case 'doc':
+				case 'docx':
+				return 'doc';
+				break;
+				case 'xls':
+				case 'xlsx':
+				return 'xls';
+				break;
+				case 'ppt':
+				case 'pptx':
+				return 'ppt';
+				break;
+				default:
+				return type;
+				break;
+			};
+		}
+
+		// 获取response数据
+		function getResponseData(){
+			branchExamineEditFile();
+			var urls = location.href;
+			var start = 0;
+			var cmdiworkflowdm = "/" + rootNextStr;
+			if (urls.indexOf(cmdiworkflowdm) != -1) {
+				start = parseInt(urls.indexOf(cmdiworkflowdm)) + 1;
+			}else{
+				start = parseInt(urls.indexOf("/cmdi-workflow-dm")) + 1;
+			}
+			var urlPath = tailor + root + 'TailorApi=' + location.href.substring(start,location.href.length);
+			showLoadingMask();
+			$.ajax({
+				url : urlPath,
+				type : 'get',
+				timeout : 30000,
+				dataType : 'json',
+				success : function(data){
+					console.log("********GET数据************");
+					console.log(data);
+					$('.dsn-page-nav').css({
+						visibility : 'visible'
+					});
+					hideLoadingMask();
+					if(!data.success){
+						showMessageDialog(data.message);
+					}else{
+						// 流程名称
+						$('.dsn-page-header').find('h4').eq(0).text(data.data.processtitle);
+						// 加载处理单html
+						createCommentHtml(data.data.comment,data.data.commenttable);
+						//加载意见页面html
+						uploadOpnionData(data.data.opinion.url,data.data.opinion.postdata,data.data.contextRoot);
+						//加载正文页面html
+						uploadPostDataForDetail(data.data.detail);
+						//加载附件页面html
+						uploadAttachmentHtml(data.data.attachment.url);
+						var flag1 = $(".detail-tips").text();
+						var flag2 = $(".attachlist").text();
+						//console.log("正文是："+flag1+"-------附件的地址是:"+flag2);
+						if (flag1 == "此公文没有正文" && flag2 == "此公文没有附件") {
+							$("#detail,#attachment").hide();
+							$(".doc-nav>li").css("width","50%");
+						}else if(flag1 == "此公文没有正文" && flag2 != "此公文没有附件"){
+							$("#detail").hide();
+							$(".doc-nav>li").css("width","33.333333%");
+						}else if(flag1 != "此公文没有正文" && flag2 == "此公文没有附件"){
+							$("#attachment").hide();
+							$(".doc-nav>li").css("width","33.333333%");
+						}else{
+							console.log("4a");
+						};
+						//加载生成编号的地址
+						var params = JSON.stringify(data.data.number.data);
+						$('#numbercontent').attr('title',data.data.contextRoot);
+						$('#numbercontent').attr('submit',data.data.number.formaction);
+						$('#numbercontent').attr('data',params);
+						$('#numbercontent').attr('filecodeid',data.data.number.fileCode);
+						$('#numbercontent').attr('idname',data.data.number.setNumberFirst);
+						$('#numbercontent').attr('referenceNumber',data.data.number.data.referenceNumber);
+						uploadNumberHref(data.data.number,data.data.contextRoot);
+						//是否需要重构提交地址
+						var newSubmitPath = isResetSubmitUrl(data.data.issetbizpa,data.data.submiturl,data.data.number.data.orgId,data.data.contextRoot);
+						// 加载提交地址---xg   cy
+						$('.submit-btn').attr('attr',data.data.number.ishave);//设置本公文是否含有编号
+						if (newSubmitPath) {
+							$('.submit-btn').attr('url',newSubmitPath);
+						}else{
+							$('.submit-btn').attr('url',data.data.submiturl);
+						}
+						// 设置提交地址的头部  cy
+						//$('.submit-btn').attr('title',data.data.contextRoot);
+
+						//创建流程跟踪页面   cy
+						$('#processPath').attr('url',data.data.processurl);
+						
+						// 创建公文提交表单
+						createDocumentSubmitHtml(data.data.documentsubmit);
+						
+					}
+					
+				},
+				error : function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}  
+		//重建提交地址
+		function isResetSubmitUrl(isreset,url,orgId,contextRoot){
+			var urlPath = tailor + contextRoot.replace("cmdi-workflow","IsReset-bizParameters=cmdi-workflow") + "/sendFileConf/subCompanyByOrgId.action";
+			var newurl;
+			if (isreset == 'true') {
+				if (orgId) {
+					$.ajax({
+						url:urlPath,
+						type:'post',
+						dataType:'JSON',
+						async:false,
+						data:{branchOrg:orgId},
+						success:function(data){
+							var branchInstitution = data.data.orgId +'';
+							var value = "branchInstitution="+branchInstitution+";";
+							var urlvalues = url.split("&");
+							newurl = urlvalues[0];
+							for (var i=1; i < urlvalues.length; i++) {
+								if (urlvalues[i].indexOf('bizParameters') != -1) {
+									urlvalues[i] = "bizParameters="+value;
+								};
+								newurl += "&" + urlvalues[i];
+							};
+						},
+						error:function(e){
+							throw(e);
+						}
+					});
+				};
+			}
+			return newurl;
+		}
+
+		//构建处理意见的页面  cy
+		function createOpnionHtml(jsondatas,obj){
+			var columns = jsondatas.column;
+			opinionData2 = columns;
+			var rows = jsondatas.rows;
+			if (rows) {
+				var rowslength = rows.length;
+				//对其排序
+				for (var i=0; i < rowslength - 1; i++) {
+					for(var j =i+1; j < rowslength; j++){
+						var temp;
+						var num1 = rows[i].label.replace("step","");
+						var num2 = rows[j].label.replace("step","");
+						if (parseInt(num1) > parseInt(num2)) {
+							temp = rows[i];
+							rows[i] = rows[j];
+							rows[j] = temp;
+						};
+					}
+				};
+			};
+			opinionData1 = rows;
+			var moreFlag = jsondatas.moreFlag;
+			var html = "<div id=\"top_search\">";
+			html += "<input id=\"searchText\" placeholder=\"按姓名搜索\"></input>";
+			html += "<span id=\"serachspan\"><img src=\"<%=BASERES%>/resource/cmcc/dsn/img/mail_serch_05.png\" id=\"searchImg\"/></span>";
+			html += "</div>";
+			html += "<div class='search_sug'>";
+
+			if (rows) {
+				for (var i=0; i < rows.length; i++) {
+					var label = rows[i].label;
+					for (var j=0; j < columns.length; j++) {
+						var code = columns[j].code;
+						if (label == code) {
+							html += "<div class='content_o'><div class=\"top_text\"><span class=\"left_span\"></span>";
+							html += "<p class=\"userMsg\">"+columns[j].title+"</p></div>";
+							html += "<div class=\"opinion_content\"><p>"+rows[i].userMsg+rows[i].time+"</p><div class=\"opiniontext\">";
+							html += "<div class=\"opiniontext-n\"></div><p class=\"opinioncontent\">"+rows[i].opinion+"</p></div></div></div>";
+							break;
+						};
+					};
+				};
+			};
+			html += "</div>";
+			opinionHtml = html;
+			obj.html(html);
+		}
+		//意见的搜索框
+		function search(){
+			var r = document.getElementById("searchText").value;
+			var reg = /.*?("+r+").*?/;
+			var c = document.querySelectorAll(".opinion_content");
+			var t = document.querySelectorAll(".top_text");
+			var u = document.querySelectorAll(".opinion_content");
+			if(r==null||r==""||/\s+/g.test(r)){
+				for(var i = 0,len = t.length ; i<len ; i++){
+					t[i].style.display = "block";
+					c[i].style.display = "block";
+					return;
+				}
+			}
+			for(var i = 0,len = t.length ; i<len ; i++){
+				if(reg.test(u[i].innerHTML)){
+					t[i].style.display = "block";
+					c[i].style.display = "block";
+				}else{
+					t[i].style.display = "none";
+					c[i].style.display = "none";
+				}
+			}
+		}
+		
+		//获得意见的Ajax请求  cy
+		function uploadOpnionData(url,postdata,contextRoot){
+			var rooturl = root;
+			if (contextRoot.indexOf("dm.cmdioa.di") != -1) {
+				rooturl = root_dm;
+			}
+			var url = tailor + rooturl + "Opinion-Text-" + url;
+			var postdatas = postdata;
+			var html = "";
+			if (pageaid == 7) {
+				url = url + "?rowNum=1000&processId=" + postdata.processId + "&bizId="+postdata.bizId+"&bizCode="+postdata.bizCode+"&label="+postdata.label+"&version="+postdata.version+"&moreFlg=true";
+				$.ajax({
+					url:url,
+					type:'post',
+					timeout:30000,
+					dataType:'json',
+					async:false,
+					success:function(result){
+						$('.content-opinion').removeClass('loading');
+						hideLoadingMask();
+						if(result.success){
+							createOpnionHtml(result.data,$(".content-opinion"));
+						}else{
+							console.log(result.message);
+						}
+					},
+					error:function(e){
+						hideLoadingMask();
+						throw(e);
+					}
+				});
+			}else{
+				$.ajax({
+					url:url,
+					type:'post',
+					data:{rowNum:postdata.rowNum,processId:postdata.processId,bizId:postdata.bizId,bizCode:postdata.bizCode,label:postdata.label,version:postdata.version,moreFlg:postdata.moreFlg},
+					timeout:30000,
+					dataType:'json',
+					async:false,
+					success:function(result){
+						$('.content-opinion').removeClass('loading');
+						hideLoadingMask();
+						if(result.success){
+							createOpnionHtml(result.data,$(".content-opinion"));
+						}else{
+							console.log(result.message);
+						}
+					},
+					error:function(e){
+						hideLoadingMask();
+						throw(e);
+					}
+				});
+			};
+			
+		}
+		
+		//获得正文请求action的地址和postdata  cy
+		function uploadPostDataForDetail(datas){
+			var url = datas.url;
+			handleDetail(datas);
+		}
+
+		//是否需要重建提交地址
+		function isResetSubmitUrl(isreset,url,orgId,contextRoot){
+			var urlPath = tailor + contextRoot.replace("cmdi-workflow","IsReset-bizParameters=cmdi-workflow") + "/sendFileConf/subCompanyByOrgId.action";
+			var newurl;
+			if (isreset == 'true') {
+				if (orgId) {
+					$.ajax({
+						url:urlPath,
+						type:'post',
+						dataType:'JSON',
+						async:false,
+						data:{branchOrg:orgId},
+						success:function(data){
+							branchInstitution = data.data.orgId +'';
+							var value = "branchInstitution="+branchInstitution+";";
+							var urlvalues = url.split("&");
+							newurl = urlvalues[0];
+							for (var i=1; i < urlvalues.length; i++) {
+								if (urlvalues[i].indexOf('bizParameters') != -1) {
+									urlvalues[i] = "bizParameters="+value;
+								};
+								newurl += "&" + urlvalues[i];
+							};
+						},
+						error:function(e){
+							throw(e);
+						}
+					});
+				};
+			}
+			return newurl;
+		}
+		//xg  cy
+		//分解StateBizParameter的值
+		function getStateBizParameter(key){
+			var stateBizParameters = $("#stateBizParameters").val();
+			if (!stateBizParameters) {
+				var headsarr = htmlhead.split("&");
+				if (headsarr) {
+					for (var i=0; i < headsarr.length; i++) {
+						if (headsarr[i].indexOf("stateBizParameters") != -1) {
+							stateBizParameters = headsarr[i].replace("stateBizParameters=","");
+						};
+					};
+				};
+			};
+			var paramsMap = string2ParametersMap(stateBizParameters);
+			return paramsMap[key];
+		}
+		function branchExamineEditFile(){
+			var moveCondition = getStateBizParameter('moveCondition');	
+			if('true' == moveCondition){
+				var varUrl = tailor + contextRoot + "branchExamineEditFile=" + 'cmdi-workflow-dm/sendFileBranchConf/comprehensiveDepartment.action';
+				var cdOrgId = $('#orgId').val();
+				var headsarr = htmlhead.split("&");
+				if (!cdOrgId) {
+					for (var i=0; i < headsarr.length; i++) {
+						if (headsarr[i].indexOf("orgId") != -1) {
+							cdOrgId = headsarr[i].replace("orgId=","");
+						};
+					};
+				};
+				$.ajax({
+					url:varUrl,
+					type:'POST',
+					dataType:'json',
+					data:{cdOrgId:cdOrgId},
+					async:false,
+					timeout:600000,
+					error: function(data){
+						console.log("出错了!!!");
+					}, 
+					success: function(data) {
+						branchExamineEditFileFlg =  data.data.comprehensiveDepartment;
+					}					
+				});
+			}
+		}
+	  //将json转成string 
+	  function parametersMap2String(params, paramSeparator, keyValueSeparator) {
+	  	if (paramSeparator == null) paramSeparator =  PARAM_SEPARATOR;
+	  	if (keyValueSeparator == null) keyValueSeparator = KEY_VALUE_SEPARATOR;
+	  	var result = '';
+	  	for (var key in params) {
+	  		if (key) {
+	  			result += key + keyValueSeparator + params[key] + paramSeparator;
+	  		};
+	  	}
+	  	return result;
+	  }
+	  //分解值成json
+	  function string2ParametersMap(params, paramSeparator, keyValueSeparator) {
+	  	if (paramSeparator == null) paramSeparator =  PARAM_SEPARATOR;
+	  	if (keyValueSeparator == null) keyValueSeparator = KEY_VALUE_SEPARATOR;
+	  	var result = {};
+	  	if (params && params != "") {
+	  		var pairs = params.split(paramSeparator);
+	  		for (var i = 0;i < pairs.length;i++) {
+	  			var pair = pairs[i];
+	  			items = pair.split(keyValueSeparator);
+	  			result[items[0]] = items[1];
+	  		}
+	  	}
+	  	return result;
+	  }
+		//检验是否为空
+		function isEmpty(e) {
+			if (typeof e=='undefined') {
+				return true;
+			}
+			if (e == null) return true;
+			if (typeof e  == 'string') return e == '';
+			if (e.length != null) return e.length == 0;
+			return false;
+		}
+	  // 增加业务参数,用于查询路径和候选人
+	  function addBizParameter(key, value){
+	  	if(isEmpty(key) || isEmpty(value) || 
+	  		key.indexOf(PARAM_SEPARATOR) > 0 || key.indexOf(KEY_VALUE_SEPARATOR) > 0 || 
+	  		value.indexOf(PARAM_SEPARATOR) > 0 || value.indexOf(KEY_VALUE_SEPARATOR) > 0){
+	  		return false;
+	  }
+	  var bizParameters = $("#bizParameters").attr('value');
+	  var paramsMap = string2ParametersMap(bizParameters);
+	  paramsMap[key] = value;
+	  $("#bizParameters").val(parametersMap2String(paramsMap));
+	  return true;
+	}
+	  //在提交前传递参数
+	  function beforeCommit() {
+	  	if('' != branchExamineEditFileFlg){
+	  		addBizParameter("moveCondition" , branchExamineEditFileFlg);
+	  	}
+	  	if('' != branchInstitution){
+	  		addBizParameter("branchInstitution" , branchInstitution);
+	  	}
+	  	addBizParameter("isBranch" , $("#isBranch").val());
+	  }
+	  //提交之前验证编号
+	  function submitFormValidate(){
+	  	if ($('#numbercontent').attr('filecodeid') != '') {
+	  		var commonFileCodeId = $('#numbercontent').attr('filecodeid');
+	  	};
+	  	var cancelSubmitValidate = getStateBizParameter('cancelSubmitValidate');
+	  	if('true' == cancelSubmitValidate){
+	  		return true;
+	  	}else{
+  			var vaRnumberGenerate = getStateBizParameter('generateCode');
+  			var generateCodeFlg = true;
+  			if('true' == vaRnumberGenerate){
+  				if ($('.fileCode')) {
+  					if($('.fileCode').length == 0){
+  						if('' == $('#'+commonFileCodeId).val()){
+  							showMessageDialog('编号不能为空!');
+  							generateCodeFlg = false;
+  						}
+  					}else{
+  						$('.fileCode').each(function(){
+  							if('' == $(this).val()){
+  								showMessageDialog('编号不能为空!');
+  								generateCodeFlg = false;
+  							}
+  						});
+  					}
+  				};
+  			}
+  			return generateCodeFlg;
+	  	}
+	  }
+		//提交
+		function commit(){
+			var url = $('.submit-btn').attr('url');
+			var urls = url ? url.split("&") : null;
+			console.log(urls);
+			var bizParameters;
+			if(url.match(/bizParameters=(.*?);/g)){
+				bizParameters = url.match(/bizParameters=(.*?);/g).toString().substr('bizParameters='.length);//这个最好写在属性里面
+			}else{
+				bizParameters = $("#bizParameters").val();
+			}
+			var urlPath = urls[0];
+			if (urls) {
+				for (var i=1; i < urls.length; i++) {
+					var para = urls[i];
+					if (para.indexOf("bizParameters=") != -1) {
+						para = "bizParameters=" + bizParameters;
+					}
+					urlPath += "&" + para;
+				};	
+			};
+			var urlpaths = tailor + contextRoot +'View-choicePerson='+ urlPath;//--cy
+			console.log("访问地址"+urlpaths);
+			var slidein = new SlippageLoad({url:urlpaths});
+		}
+		
+		//xg  cy
+		//清除查找意见的样式效果
+		function clearFindOpnitionRst() {
+			$(".opinion_content").each(function(){
+				$(this).find(".opiniontext").removeClass('alive');
+				$(this).find(".opiniontext-n").removeClass('alive');
+			});
+			$(".dsn-page-content").animate({
+				scrollTop : 0
+			}, 500);
+		}
+
+		//查找意见标示出来并定位到第一个满足查询条件的元素
+		function findOpnition(name) {
+			var ser_strs = $(".opinion_content p:contains(" + name + ")");
+			$(".opinion_content:contains("+name+")").each(function(){
+				$(this).find(".opiniontext").addClass('alive');
+				$(this).find(".opiniontext-n").addClass('alive');
+			});
+			click_scroll($(".opinion_content p:contains(" + name + "):first"));
+		}
+
+		function click_scroll(scroll2) {
+			var offset = $(scroll2).offset();
+			$(".dsn-page-content").animate({
+				scrollTop : offset.top - 100 //让body的scrollTop等于pos的top，就实现了滚动
+			}, 500);
+		}
+		//获得bizParmeters
+		function getRootByDrafter() {
+			var url = 'draftUserIsCaptial.action?commonEntity.undertakerId=' + $("#undertakerId").val();
+			if ($('#currentStep').val() == "step20") {
+				$.ajax({
+					url: url,
+					error: function(data) {
+						alert("出错了!!!");
+					},
+					success: function(data) {
+						addBizParameter("iCapital", data.message);
+					},
+					timeout: 600000,
+					type: 'POST',
+					dataType: 'json'
+				});
+			}
+
+		}
+		//end----cy
+		$(document).ready(function(){
+			// 页面初始化开始
+			var clientHeight = $(window.parent).height(),
+			clientWidth = $(window.parent).width();
+			$('#panle').css({height:clientHeight+'px',width:clientWidth+'px'});
+			$('.dsn-page-content').css({height:(clientHeight-48*3)+'px'});
+			
+			//xg   cy
+			$('.dsn-page-nav').css({
+				'visibility' : 'hidden'
+			});
+			if (htmlhead.match("origin=PENDING")) {
+			}else{//已办列表的公文和待阅列表的公文，隐藏提交按钮
+				$('.submit-btn').hide();
+			};
+			// 页面初始化结束
+			$('*[clickurl]').click(function(){
+				var url = tailor + root + $(this).attr('clickurl');
+				var slidein = new SlippageLoad({
+					url : url
+				});
+			});
+			// 获取response数据
+			getResponseData();
+			// 导航条点击事件触发
+			//start1  cy加载处理单
+			$(".dsn-page-content div").hide();
+			$(".content-comment").show();
+			//end1
+			$('.doc-nav li').click(function(){
+				if($(this).hasClass('on')){
+					return false;
+				}
+				$('.doc-nav li.on').removeClass('on');
+				$(this).addClass('on');
+				$('.dsn-page-content>div').hide();
+				$('.content-'+$(this).attr('id')).show();
+				
+			});
+			// 返回按钮点击事件触发
+			$('.go-back').click(function(){					
+				if (htmlhead.match("origin=VIEWING")) {
+					window.parent.setTimeout(function(){
+						window.parent.location.reload();
+					},300);
+				};
+				var slideout = new SlippageUnload();
+			});
+			// 提交按钮点击事件触发
+			$('.submit-btn').click(function(){
+				//var urlPath = tailor + root_dm +'View-choicePerson='+ $(this).attr('url');
+				//var slidein = new SlippageLoad({url:urlPath});
+				if (submitFormValidate()) {
+					if (typeof window['beforeCommit'] == 'function') {
+						beforeCommit();
+						//调用相关逻辑后,提交
+						commit();
+					} else {
+						commit();
+					}
+				}
+			});		
+			//go home按钮的事件触发，进入流程跟踪--cy
+			$(".processbox").hide();
+			$('.go-home').click(function(){
+				$(".processbox").show();
+			});
+			$(".boxcontent").click(function(){
+				var url = $(this).attr("url");
+				if (!url) {
+					getNumBox();
+					return false;
+				};
+				var urlPath = tailor + root + "ProcessURL-" + url;
+				console.log(urlPath);
+				var slidein = new SlippageLoad({
+					url:urlPath
+				});
+				$('.shadow').click();
+			});
+			$(".shadow").click(function(){
+				$(".processbox").hide();
+			});	
+			//查看附件
+			$('.attachitem').click(function(){
+			});
+		});
+		$(document).on("click","#serachspan",function(){
+			console.log("jojn");
+			var ser_conten = "";
+					//输入的关键字
+					var ser_str = $("#searchText").val();
+					console.log(ser_str);
+					ser_str = (ser_str) ? ser_str : "";
+					clearFindOpnitionRst();
+					if (ser_str != "") {
+						findOpnition(ser_str);
+					}
+				});
+		/*document.querySelectorAll("input[type=hidden]");*/
+			</script>
+		</body>
+		</html>

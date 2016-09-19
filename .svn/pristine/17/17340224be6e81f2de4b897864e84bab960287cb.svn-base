@@ -1,0 +1,317 @@
+<%=include('login.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/login.mini.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<title>设计院-登录</title>
+	<style type="text/css">
+		/*系统单选按钮样式*/
+		input#pageAid2,input#pageAid4,input#pageAid6 {
+		    margin-left: 20%;
+		}
+		.pageaid{
+			margin-top:2%;
+		}
+		/*记住密码样式*/
+		i.fa.fa-square-o.checked:before {
+		    content: "";
+		    display: block;
+		    width: 15px;
+		    height: 15px;
+		    border-radius: 10px;
+		    background-color: #0c6cff;
+		}
+		/*验证码*/
+		.code {
+		font-family: Arial;
+		font-style: italic;
+		font-weight: bold;
+		border: 0;
+		letter-spacing: 2px;
+		font-size: 1.4 rem;
+		color: blue;
+		padding-right: 5px;
+	}
+	</style>
+</head>
+<body class="login-page">
+	<div class="context">
+		<div class="login-form-item underline">
+			<div class="input-icon"><i class="fa fa-user"></i></div>
+			<div class="input-field">
+				<input type="text" id="username" value="" name="username" placeholder="请输入用户名" value=""/>
+				<span id="usrClearBtn" class="input-clear-btn">
+					<i class="fa fa-times-circle"></i>
+				</span>
+			</div>
+		</div>
+		<div class="login-form-item underline">
+			<div class="input-icon"><i class="fa fa-lock"></i></div>
+			<div class="input-field">
+				<input type="password" id="password" value="" name="password" placeholder="请输入口令" value=""/>
+				<span id="pwdClearBtn" class="input-clear-btn">
+					<i class="fa fa-times-circle"></i>
+				</span>
+			</div>
+		</div>
+		<!-- 验证码 -->
+		<div id="valicodeDiv" class="login-form-item underline" style="display: none;">
+			<div class="input-icon"><i class="fa fa-shield"></i></div>
+			<div class="input-field">
+				<input id="valicode" style="width:65%;" name="valicode" placeholder="请输入验证码" type="text" value="">
+  				<input style="font-size: 1.4rem;width:30%" type="button" value="" id="checkCode" class="code" data-role="none">
+  				<span onclick="RecreateCode();" class="input-icon" style="width: 10%;"><i class="fa fa-refresh"></i></span>
+  			</div>
+  		</div>
+		<div class="login-form-item">
+			<div id="saveAccount" class="input-icon"><i class="fa fa-square-o"></i></div>
+			<span>记住密码</span>
+		</div>
+		<div class="login-btn">登录</div>
+		
+		<div class="pageaid">
+			<input type="radio" value="5" name="pageAid" id="pageAid1" checked="checked"/><span>公文管理系统</span>
+	    	<input type="radio" value="6" name="pageAid" id="pageAid2"/><span>人力资源系统</span>
+	    </div>
+	    <div class="pageaid">
+			<input type="radio" value="7" name="pageAid" id="pageAid3"/><span>采购管理系统</span>
+	    	<input type="radio" value="8" name="pageAid" id="pageAid4"/><span>法律事务管理系统</span>
+	    </div>
+	    <div class="pageaid">
+			<input type="radio" value="9" name="pageAid" id="pageAid5"/><span>中京管理系统</span>
+	    	<input type="radio" value="4" name="pageAid" id="pageAid6"/><span>行政管理系统</span>
+	    </div>
+	</div>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/encryptJS.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<script type="text/javascript">
+		var root = '<%=ROOTURL%>',
+			page = <%=json%>,
+			tailor = '<%=TAILOR_BASE_URL%>';	
+		var rememberPwdClicks = 1;//将记住密码点击框设为全局变量--cy
+		var errorLoginCount = 1;//错误登陆次数设为全局变量--cy
+		var isShowValidate = false;//是否显示了验证码
+		var defaultLen = 4;//固定验证码的位数
+		// 跳转首页
+		function jumpIndex(aid){
+			// console.log('jumpIndex');
+			//根据《MOA开发约定事项》中规定，登录成功后首页必须为view/platform/main.do，否则会造成客户端针对不同应用需要修改
+			//var indexUrl = tailor + root + 'workbench/Index?pageaid='+aid;
+			var indexUrl = tailor + root + 'view/platform/main.do?pageaid='+aid;
+			
+			//目前登录成功加载iframe的方式 在登录后刷新页面会回到登录页，很不友好，改为跳转
+			//var slidein = new SlippageLoad({
+			//	url : indexUrl
+			//});
+			window.location.replace(indexUrl);
+		}
+		// 登陆请求
+		function dologin(parma){
+			showLoadingMask();
+			if (isShowValidate) {
+				var inputvalicode = $('#valicode').val();
+				var outvalicode = $('#checkCode').val();
+				if (inputvalicode.toLocaleLowerCase()  == outvalicode.toLocaleLowerCase()) {
+					doLoginAjax(parma);//请求登录ajax
+				}else{
+					showMessageDialog("验证码错误");
+				}
+			}else{
+				doLoginAjax(parma);//请求登录ajax
+			}
+			
+		}
+		//请求ajax,登录是否成功
+		function doLoginAjax(parma){
+			var urlPath = tailor+root+'workbench/login.action';
+			$.ajax({
+				url : urlPath,
+				type : 'post',
+				timeout : 30000,
+				data : parma,
+				dataType : 'json',
+				success : function(data){
+					hideLoadingMask();
+					if(data.success){
+						if(data.data === 'isOk'){
+							jumpIndex(parma.aid);
+						}else{
+							errorLoginCount ++;
+							showMessageDialog('用户名或密码错误！');
+							showValicodeDiv();
+						}	
+					}else{
+						showMessageDialog(data.message);
+					}
+					console.log(data);
+				},
+				error : function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}
+		
+		/*
+		//检测cookie值是否存在
+		function checkCookie(){
+			var cookies = document.cookie;
+			var Cookies = {
+				username : '',
+				password : ''
+			};
+			if (cookies.length > 0 && cookies.indexOf("^") != -1) {
+				var cookiearr = cookies.split("^");
+				for (var i=0; i < cookiearr.length; i++) {
+				  	var arrvalue = cookiearr[i];
+				  	if (arrvalue.indexOf("username=") != -1) {
+				  		Cookies.username = arrvalue.split("=")[1];
+				  	}else if (arrvalue.indexOf("password=") != -1) {
+				  		Cookies.password = arrvalue.split("=")[1];
+				  	}else{}
+				};
+			};
+			return Cookies;
+		}
+		*/
+		
+		//已加载页面就将cookie中的用户名和密码填充
+		function fillInputValue(){
+			/*
+			var cookies = checkCookie();
+			if (cookies.username != "" && cookies.password != "") {
+				$('#username').val(cookies.username);
+				$('#password').val(cookies.password);
+				$("#saveAccount").find(".fa").first().removeClass("fa-square-o").addClass("fa-check-square-o");
+				rememberPwdClicks ++;
+			};
+			*/
+			if (undefined != page.save && page.save == "true") {
+				if (undefined != page.usr)
+					$("#username").val(page.usr);
+				if (undefined != page.pwd)
+					$("#password").val(page.pwd);
+				$("#saveAccount").find(".fa").first().removeClass("fa-square-o").addClass("fa-check-square-o");
+			}
+		}
+		//验证码
+		function showValicodeDiv(){
+			if (errorLoginCount >= 3) {
+				isShowValidate = true;
+				var codes = createCode();
+				$("#checkCode").val(codes);
+				$('#valicodeDiv').show();
+			};
+		}
+		function RecreateCode() {
+			var newCode = createCode();
+			$("#checkCode").val(newCode);
+		}
+		function createCode(codeLength){
+			codeLength = codeLength? codeLength : defaultLen;
+			var code = "";   
+			var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');//随机数
+			for(var i = 0; i < codeLength; i++) {//循环操作   
+				var charIndex = Math.floor(Math.random()*62);//取得随机数的索引
+				code += random[charIndex];//根据索引取得随机数加到code上   
+			}
+			return code;
+		}
+		$(document).ready(function(){
+			//记住密码---cy
+			fillInputValue();//已加载页面就将cookie中的用户名和密码填充
+			//清除按钮
+			$('#usrClearBtn').click(function(){
+				$('#username').val("");
+			});
+			$('#pwdClearBtn').click(function(){
+				$('#password').val("");
+			});
+			
+			/*
+			$('#saveAccount').click(function(){
+				rememberPwdClicks ++;
+				if (rememberPwdClicks % 2 == 0) {
+					$("#saveAccount").find(".fa").first().removeClass("fa-square-o").addClass("fa-check-square-o");
+					var username = $('#username').val()||'',
+						password = $('#password').val()||'';
+					//设置过期时间为15天
+					var date = new Date();
+					date.setDate(date.getDate() + 1);
+					document.cookie = "username="+username+"^password="+password+"^;expires=" + date.toGMTString();
+				}else{
+					document.cookie = "username=^password=^;expires=expires=Thu, 01-Jan-70 00:00:01 GMT";
+					$("#saveAccount").find(".fa").first().removeClass("fa-check-square-o").addClass("fa-square-o");
+				}
+			});
+			*/
+			
+			$("#saveAccount").on("click", function() {
+				var tag = $(this).find(".fa").first();
+				var checked = tag.hasClass("fa-check-square-o");
+				if (checked)
+					tag.removeClass("fa-check-square-o").addClass("fa-square-o");
+				else
+					tag.removeClass("fa-square-o").addClass("fa-check-square-o");
+			});
+			
+			/*
+			//当输完用户名匹配cookie中的用户名值是自动补充密码
+			$('#username').focusout(function(){
+				var username = $('#username').val()||'',
+					password = $('#password');
+				//检测是否存在cookie
+				var cookies = checkCookie();
+				if (cookies.username != "" && cookies.username == username) {
+					password.val(cookies.password);
+					$("#saveAccount").find(".fa").first().removeClass("fa-square-o").addClass("fa-check-square-o");//使记住密码框成选中状态
+				}else{
+					$("#saveAccount").find(".fa").first().removeClass("fa-check-square-o").addClass("fa-square-o");//使记住密码框成未选中状态
+				}
+			});
+			*/
+			
+			$('.login-btn').click(function(){
+				var username = $('#username').val()||'',
+					password = $('#password').val()||'';
+				if(!username||!password){
+					return alert('请填写密码');
+				}
+				//xg
+				var pageaid = 0;
+				var radioChecked = $('input:checked');
+				if (radioChecked && radioChecked.attr("type") == "radio") {
+					pageaid = parseInt(radioChecked.val());
+				};
+				var parma = {
+					loginType : 2,
+					aid : pageaid,//xg
+					userName : username,
+					password : rsaEncrypt(password),
+					saveAccount: $("#saveAccount").find(".fa").first().hasClass("fa-check-square-o")
+				};
+				dologin(parma);
+			});
+		});
+		
+		function rsaEncrypt(txt) {
+			var oRSA = page.rsa;
+			if (oRSA) {
+				setMaxDigits(oRSA.max);
+				var oKeyPair = new RSAKeyPair(oRSA.pk, "", oRSA.mod);
+				return encryptedString(oKeyPair, txt, RSAAPP.NoPadding);
+			} else {
+				return txt;
+			}
+		}
+	</script>
+</body>
+</html>

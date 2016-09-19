@@ -1,0 +1,332 @@
+@charset "utf-8";
+
+/* 发、抄、密邮件地址填写域 */
+.sle_pep {
+	position: relative;
+	width: 100%;
+}
+.sle_pep li {
+	padding: 0 .6rem;
+	line-height: 2.4rem;
+	font-size: 1.2rem;
+	color: #b4bcc7;
+	position: relative;
+	border-bottom: 1px solid #dde4e9;
+}
+.sle_pep .sele_type {
+	vertical-align: middle;
+	-webkit-text-size-adjust: none;
+}
+#sele_type {
+	color: black;
+	display: inline-block;
+	width: 75%;
+	overflow: hidden;
+	vertical-align: middle;
+	outline: none;
+	border: 0;
+}
+.sle_pep input[type="text"] {
+	width: 75%;
+	outline: none;
+	border: 0;
+}
+.sle_pep img {
+	width: 1rem;
+	height: 1rem;
+}
+/* 抄、密编辑控件，发件人域 */
+.sle_method {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+	width: 100%;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	background-color: #f1f4f5;
+}
+.sle_method div {
+	color: #74859c;
+	border-right: 1px solid #d6dee3;
+}
+.sle_method div:first-child {
+	padding-left: .6rem;
+}
+.sle_method div:last-child {
+	-webkit-box-flex: 1.0;
+	border-width: 0;
+	padding-right: .6rem;
+}
+.sle_method .met_one,
+.sle_method .met_two {
+	width: 20%;
+	text-align: center;
+}
+.sle_method .met_three {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	color: #b4bcc7;
+}
+.met_three span {
+	display: inline-block;
+	text-align: center;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.met_three span:first-child {
+	width: 30%;
+}
+.met_three span:last-child {
+	width: 70%;
+}
+/* 主题域 */
+.send_name {
+	height: 3rem;
+	line-height: 3rem;
+	padding: 0 .6rem;
+	color: #b4bcc7;
+	font-size: 1.4rem;
+	border-bottom: 1px solid #dde4e9;
+}
+.send_name input[type="text"] {
+	border: 0;
+	outline: none;
+	font-size: 1.4rem;
+}
+/* 正文域 */
+.send_content {
+	color: black;
+	font-size: 1.2rem;
+	line-height: 2rem;
+	padding: .6rem;
+	outline: none;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+}
+/* 人员选择弹窗 */
+.wic,
+.wic_ifo_back {
+	display: none;
+	z-index: 999;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.4);
+	overflow: hidden;
+}
+.select_peope {
+	position: relative;
+	border-radius: 4px;
+	margin: 20% .5rem 0;
+	background-color: #ffffff;
+	max-width: 750px;
+	height: 50%;
+	overflow: hidden;
+}
+.sele_name {
+	width: 100%;
+	background-color: #41546e;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	font-size: 1.2rem;
+	color: #ffffff;
+	text-indent: .8rem;
+}
+.sele_content {
+	position: absolute;
+	top: 2.4rem;
+	left: 0;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.sele_btn {
+	position: absolute;
+	height: 4rem;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+}
+.sele_btn .two_btn {
+	display: inline-block;
+	width: 33%;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	margin-top: .8rem;
+	font-size: 1.1rem;
+	text-align: center;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+.select_peope .HR_yes {
+	background-color: #0c6cff;
+	color: #ffffff;
+}
+.select_peope .HR_no {
+	background-color: #e8ecee;
+	color: #74859c;
+	margin-left: 10%;
+	margin-right: 14%;
+}
+.one {
+	width: 100%;
+	border-bottom: 1px solid #cfd9df;
+}
+.section {
+	width: 100%;
+	display: block;
+	font-size: 18px;
+	position: relative;
+	background-color: #e8ecee;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+}
+.section .sle_ok {
+	width: 21px;
+	height: 21px;
+	border-radius: 100%;
+	-webkit-border-radius: 100%;
+	display: inline-block;
+	border: 1px solid #0c6cff;
+	text-align: center;
+	vertical-align: middle;
+	margin-right: 5px;
+	position: relative;
+	top: -3px;
+}
+.sele_less {
+	display: inline-block;
+	position: absolute;
+	right: 17px;
+	vertical-align: middle;
+	top: 0;
+	height: 100%;
+	padding-left: 12px;
+	border-left: 1px solid #dbe1e5;
+}
+.sele_less img {
+	width: 18px;
+	margin-top: 14px;
+	margin-right: 8px;
+	position: relative;
+}
+.one_content {
+	width: 100%;
+	display: none;
+}
+.one_content li {
+	padding: 0 .6rem;
+	font-size: 1.2rem;
+	height: 2.4rem;
+	line-height: 2.4rem;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	border-bottom: 1px solid #e4e9ec;
+}
+.sle_ok {
+	position: relative;
+	display: inline-block;
+	width: 1.4rem;
+	height: 1.4rem;
+	line-height: 1.4rem;
+	border-radius: 100%;
+	-webkit-border-radius: 100%;
+	border: 1px solid #0c6cff;
+	text-align: center;
+	vertical-align: middle;
+	margin-right: 5px;
+}
+.sle_ok img {
+	width: .9rem;
+	height: .6rem;
+	vertical-align: middle;
+}
+/*通讯录列表*/
+.leadership {
+    background-color: #e8ecee;
+    height: 3rem;
+	line-height: 3rem;
+    position: relative;
+    padding-left: 26px;
+    color: #74859c;
+    border-bottom: 1px solid #e4e9ec;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+
+/*隐藏*/
+.sle_pep .l_two, .sle_pep .l_three {
+	display: none
+}
+/* 状态反馈弹窗 */
+.back_yes {
+	position: relative;
+	top: 30%;
+	left: 0;
+	margin: 0 10%;
+	height: 30%;
+	border-radius: 5px;
+	background-color: #fff;
+}
+.status_icon {
+	position: absolute;
+	width: 6rem;
+	height: 6rem;
+	line-height: 6rem;
+	top: -3rem;
+	left: 50%;
+	margin-left: -3rem;
+	border-radius: 50%;
+	color: #fff;
+	text-align: center;
+	font-size: 3.2rem;
+}
+.status_icon.success {
+	background-color: #0c6cff;
+}
+.status_icon.false {
+	background-color: #ff3f3e;
+}
+.back_yes .yes_p_1 {
+	padding-top: 3.5rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	font-size: 1.6rem;
+}
+.back_yes .yes_p_2 {
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	font-size: .8rem;
+}
+/* 自绘制成功状态，实心圆+勾 */
+.yes_circle {
+	width: 90px;
+	background-color: #0c6cff;
+	height: 90px;
+	border-radius: 100%;
+	-webkit-border-radius: 100%;
+	position: absolute;
+	left: 34%;
+	top: -45px;
+}
+.yws_tick {
+	width: 30px;
+	height: 55px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	border-bottom: 4px solid #ffffff;
+	border-right: 4px solid #ffffff;
+	position: absolute;
+	top: 6px;
+	left: 28px;
+}

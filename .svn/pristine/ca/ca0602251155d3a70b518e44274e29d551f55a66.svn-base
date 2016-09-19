@@ -1,0 +1,23 @@
+*{
+	padding: 0;
+	margin: 0;
+}
+body{
+	background-color: #fff;
+	font-size: 16px;
+}
+.moa-erh-dblist{
+	padding: 0 11px;
+}
+.moa-erh-dblist>li{
+	font-family: "Microsoft YaHei","微软雅黑";
+	padding: 17px 7px;
+	display: block;
+	border-bottom: 1px #efefef solid;
+	list-style: none;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #435e82;
+}

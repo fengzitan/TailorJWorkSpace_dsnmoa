@@ -1,0 +1,528 @@
+<%=include('processpage.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/base.css"/>
+	<link rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/dblist.css"/>
+	<link rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<script type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<title>设计院-流程跟踪</title>
+	<style type="text/css">
+		#controlSize{
+			width: 100%;
+			height: 8%;
+		}
+		.control{
+			float:right;
+			margin-right: 10px;
+			width: 60px;
+		}
+		.distance{
+			margin-right: 100px;
+		}
+	</style>
+</head>
+<body>
+	<div id="panle">
+		<div class="dsn-page-header">
+			<h4 class="center">流程跟踪</h4>
+			<a class="go-back fa fa-arrow-left"> </a>
+			<!--<a class="go-home fa fa-filter"> </a>-->
+		</div>
+		<div class="dsn-page-content">
+			<div style="width: 100%;height: 100%;overflow: scroll;">
+				<canvas id="canvas" style="height: auto;width: 100%;">
+	            	该浏览器版本过低，无法显示canvas
+	        	</canvas>
+	        	<div id="controlSize">
+					<div class="control distance">
+						<canvas id="canvasMin">该浏览器版本过低，无法显示canvas</canvas>
+					</div>
+					<div class="control">
+						<canvas id="canvasMax">该浏览器版本过低，无法显示canvas</canvas>
+					</div>
+				</div>
+			</div>
+			
+        	<div id="hide" style="display: none;">
+		        <img src="<%=LOCAL_RESOURCE_URL%>img/passed.gif"/>
+		        <img src="<%=LOCAL_RESOURCE_URL%>img/running.gif"/>
+		        <img src="<%=LOCAL_RESOURCE_URL%>img/unavailable.gif"/>
+		    </div>
+		</div>
+	</div>
+	<script>
+		//得到Ajax返回的数据
+		var tailor = "<%=TAILOR_BASE_URL%>";
+		var root = "<%=ROOTURL_DM%>";
+		var posturl = "<%=str%>";
+		
+		var canvas = document.getElementById("canvas");
+		var context = canvas.getContext("2d");
+		var canvasMax = document.getElementById("canvasMax");
+		var contextMax = canvasMax.getContext("2d");
+		var canvasMin = document.getElementById("canvasMin");
+		var contextMin = canvasMin.getContext("2d");
+		
+		var RADIUS = 20;  //圆形半径
+		var node_WIDTH = 100;//节点宽度
+		var node_HEIGHT = 50;//节点高度
+		var start_end_WIDTH = 48;//开始或者结束节点宽度
+		var line_color = "#336699";//线条颜色
+		var line_weight = 1;//线条粗细
+		//节点的状态值status
+		var base_Name = "state";
+		var normal_Name = "state";
+		var junction_Name = "junction";
+		var place_holder_Name = "place-holder-state";
+		var end_Name = "end-state";
+		var start_Name = "start-state";
+		var serial_exe_Name = "serial-exe-state";
+		var serial_Name = "serial-state";
+		var compete_exe_Name = "compete-exe-state";
+		var compete_join_Name = "compete-join-state";
+		var compete_Name = "compete-state";
+		var join_Name = "join-state";
+		var sub_Name = "subprocess-state";
+		
+		var startState = 'step1';//开始节点的sid
+		var endState = 'step0';//结束节点的sid
+		
+		var noOUTNodes = new Array();//没有输出的节点
+		var inPutNodes = new Array();//输出的节点
+		var clickCount = 1;//点击canvas的次数
+		
+		var maxX = 0, maxY = 0;
+				
+		//请求xml文件地址，得到xml数据
+		function getXMLDatas(){
+			var urlpath = tailor + root + posturl;
+			showLoadingMask();
+			$.ajax({
+				url:urlpath,
+				type:'get',
+				dataType:'xml',
+				success:function(data){
+					hideLoadingMask();
+					var allNodes = $(data).find("processtrace").children();
+		            createNodeDemo(context,allNodes);//画出矩形框内容
+					drawLines(context,allNodes,noOUTNodes);//画出连接线条
+					lookForMaxXandY(canvas,context,allNodes);
+				},
+				error:function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}
+		
+		//寻找最大的X、Y坐标，控制画布的大小
+		function lookForMaxXandY(canvas,context,allnodes) {
+		    var length = allnodes.length;
+		    for(var i = 0; i < length; i++){
+		        var state = allnodes[i];
+		        var node = new FlowNode(state);
+		        //比较X
+		        if(maxX < node.centerX){
+		            maxX = node.centerX;
+		        }
+		        //比较Y
+		        if(maxY < node.centerY){
+		            maxY = node.centerY;
+		        }
+		    }
+		    maxX = parseInt(maxX) + parseInt(node_WIDTH * 2);
+		    maxY = parseInt(maxY) + parseInt(node_HEIGHT * 2);
+		    //重新设置画布的大小
+	        canvas.width = maxX;
+	        canvas.height = maxY;
+	        createNodeDemo(context,allnodes);//画出矩形框内容
+	        drawLines(context,allnodes,noOUTNodes);//画出连接线条		    
+		}
+		
+		//创建节点demo，画圆，画矩形
+		function createNodeDemo(context,allnodes){
+		    var arr_length = allnodes.length;
+		    for(var i = 0; i < arr_length; i++){
+		        var state = allnodes[i];
+		        var node = new FlowNode(state);
+		        if(node.type == start_Name){
+		            drawCircle(context,true,node);
+		        }else if(node.type == end_Name){
+		            drawCircle(context,false,node);
+		        }else{
+		            //drawRect(context,node);
+		            //不输出的节点
+		            if(node.type == place_holder_Name || node.type == 'PLACE_HOLDER_STATE'|| node.type == 'placeholder-state'){
+		                var count = noOUTNodes.length;
+		                noOUTNodes[count] = node;
+		            }else{
+		            	var count = inPutNodes.length;
+                		inPutNodes[count] = node;
+		                drawRect(context,node);
+		            }
+		        }
+		    }
+		}
+		
+		//创建节点对象
+		function FlowNode(node){
+		    this.obj = node;
+		    this.sid = node.getAttribute("sid");
+		    this.name = node.getAttribute("name");
+		    this.type = node.getAttribute("type");
+		
+		    this.status = node.getAttribute("status");
+		    if(!this.status){
+		        this.status = "";
+		    }
+		
+		    this.centerX = parseInt(node.getAttribute("xlocation"));
+		    this.centerY = parseInt(node.getAttribute("ylocation"));
+		
+		    var temp_x = checkStateType(this.sid)?start_end_WIDTH/2:node_WIDTH/2;
+		    var temp_y = checkStateType(this.sid)?start_end_WIDTH/2:node_HEIGHT/2;
+		    this.left = this.centerX - temp_x;
+		    this.top = this.centerY - temp_y;
+		
+		    this.lines = node.getElementsByTagName("transition");
+		    this.users = node.getElementsByTagName("user");
+		
+		    this.image = "<%=LOCAL_RESOURCE_URL%>img/passed.gif";
+		    this.color = "#00A631";
+		    if(this.status == "passed"){
+		        this.image = "<%=LOCAL_RESOURCE_URL%>img/passed.gif";
+		        this.color = "#00A631";
+		    }else if(this.status == "running" || this.status == "subprocess-running"){
+		        this.image = "<%=LOCAL_RESOURCE_URL%>img/running.gif";
+		        this.color = "#F40000";
+		    }else if(this.status == "suspend"){
+		        this.image = "<%=LOCAL_RESOURCE_URL%>img/suspend.gif";
+		        this.color = "#4182be";
+		    }else if(this.status == ""){
+		        this.image = "<%=LOCAL_RESOURCE_URL%>img/unavailable.gif";
+		        this.color = "#65635F";
+		    }
+		}
+
+		//该节点是否为开始或者结束节点
+		function checkStateType(sid){
+		    var flag = true;
+		    if(sid == endState || sid == startState){
+		        flag = true;
+		    }else{
+		        flag = false;
+		    }
+		    return flag;
+		}
+		
+		//绘制图形
+		//圆形isStart是判断是否为开始节点，true:是开始节点
+		function drawCircle(context,isStart,node){
+		    if(isStart){
+		        context.beginPath();
+		        context.strokeStyle = "#00A631";
+		        context.arc(node.centerX,node.centerY,RADIUS,0,Math.PI*2);
+		        context.closePath();
+		
+		        context.stroke();
+		
+		        var text_X = node.centerX - parseInt(RADIUS/2);
+		        var text_Y = node.centerY;
+		        context.fillText("开始",text_X,text_Y);
+		
+		        context.stroke();
+		    }else{
+		        context.strokeStyle = "#F40000";
+		        context.beginPath();
+		        context.arc(node.centerX,node.centerY,RADIUS,0,Math.PI*2);
+		        context.closePath();
+		
+		        context.stroke();
+		
+		        var text_X = node.centerX - parseInt(RADIUS/2);
+		        var text_Y = node.centerY;
+		        context.fillText("结束",text_X,text_Y);
+		
+		        context.stroke();
+		    }
+		}
+		
+		//绘制矩形
+		function drawRect(context,node){
+		    context.strokeStyle = node.color;
+		    context.beginPath();
+		    context.strokeRect(node.left,node.top,node_WIDTH,node_HEIGHT);
+		    context.closePath();
+		    context.stroke();
+		
+		    var img = new Image();
+		    img.src = node.image;
+		    context.drawImage(img,node.left+5,node.top+15);
+		
+		    var text_X = node.left + 40;
+		    var text_Y = node.top;
+		    //对文本长度的处理
+		    var str = node.name;
+		    var str_len = str.length;
+		    var counts;
+		    if(str_len > 4){
+		        counts = parseInt(str_len / 4) + (str_len % 4 > 0 ? 1 : 0);
+		    }
+		    if(counts){
+		        if(counts < 3){
+		            //对只有两行字的位置处理
+		            for(var i = 0; i < counts; i++){
+		                var start = i * 4;
+		                var end = (i + 1) * 4;
+		                var text = str.substring(start,end);
+		                text_Y = text_Y + 16;
+		                context.fillText(text,text_X,text_Y);
+		                context.fill();
+		            }
+		        }else{
+		            //对只有三行字的位置处理
+		            for(var i = 0; i < counts; i++){
+		                var start = i * 5;
+		                var end = (i + 1) * 5;
+		                var text = str.substring(start,end);
+		                if(i==0){
+		                    text_Y = text_Y + 11;
+		                }else{
+		                    text_Y = text_Y + 16;
+		                }
+		                context.fillText(text,text_X,text_Y);
+		                context.fill();
+		            }
+		        }
+		    }else{
+		        text_Y = node.top + parseInt(node_HEIGHT/2);
+		        context.fillText(node.name,text_X,text_Y);
+		        context.fill();
+		    }
+		    context.textBaseline = "middle";
+		}
+		//画线条
+		function drawLines(context,allnodes,nooutnodes) {
+		    var arr_length = allnodes.length;
+		    for (var i = 0; i < arr_length; i++) {
+		        var state = allnodes[i];
+		        var node = new FlowNode(state);
+		        var lines = node.lines;//指向transition节点
+		        var lines_length = lines.length;
+		        for (var j = 0; j < lines_length; j++) {
+		            var transition = lines[j];
+		            var to = transition.getAttribute("to");
+		            var points = transition.getAttribute("points");
+		            var toNode = transition.getAttribute("toNode");
+		            //首先画points指向的点
+		            var pointArray;
+		            if (points) {
+		                pointArray = points.split(",");
+		            }
+		            //判断是否在第一个point画箭头
+		            if (pointArray) {
+		                if (toNode) {
+		                    //首先画points中的点
+		                    var length = pointArray.length;
+		                    length = length % 2 ? (length - 1) / 2 : length / 2;
+		                    for (var k = 0; k < length; k++) {
+		                        var pointX1 = parseInt(pointArray[k * 2]);
+		                        var pointY1 = parseInt(pointArray[k * 2 + 1]);
+		                        var pointX2 = parseInt(pointArray[(k + 1) * 2]);
+		                        var pointY2 = parseInt(pointArray[(k + 1) * 2 + 1]);
+		                        drawLine(context, pointX1, pointY1, pointX2, pointY2);
+		                    }
+		                    var endX = parseInt(pointArray[(length - 1) * 2]);//1
+		                    var endY = parseInt(pointArray[(length - 1) * 2 + 1]);//1
+		                    //然后画子节点transition中的points中的点，有箭头
+		                    for (var h = 0; h < nooutnodes.length; h++) {
+		                        var node1 = nooutnodes[h];
+		                        if (node1.sid == toNode) {
+		                            //连接toNode的节点的中心点和points的最后一个点
+		                            drawLine(context,endX,endY,node1.centerX,node1.centerY);
+		                            var lines1 = node1.lines;
+		                            for (var g = 0; g < lines1.length; g++) {
+		                                var pointarr = lines1[g].getAttribute("points");
+		                                pointarr = pointarr.split(",");
+		                                //连接toNode的中心点和它的子节点transition的points指向的第一个点
+		                                var startX = pointarr[0];
+		                                var startY = pointarr[1];
+		                                drawLine(context,node1.centerX,node1.centerY,startX,startY);
+		                                //画线+箭头
+		                                drawLineNotoNode(context, pointarr);
+		                            }
+		                        }
+		                    }
+		                } else {
+		                    drawLineNotoNode(context, pointArray);
+		                }
+		            }
+		        }
+		    }
+		}
+		
+		//画箭头
+	    function drawLineHead(ctx, x, y, theta) {
+	        ctx.fillStyle = line_color;
+	        ctx.save();
+	        ctx.beginPath();
+	        ctx.translate(x, y);//把起点设置在(x,y)
+	        ctx.rotate(theta);//旋转当前的绘图,旋转角度，以弧度计
+	        ctx.moveTo(0, 0);
+	        ctx.lineTo(3, 8);
+	        ctx.lineTo(-3, 8);
+	        ctx.closePath();
+	        ctx.restore();
+	        ctx.fill();
+	    }
+		
+		//画线条
+		function drawLine(context, x1, y1, x2, y2) {
+	        //context.className = "line";
+	        context.strokeStyle = line_color;
+	        context.lineWidth = 1;
+	
+	        //首先判断线段的中点是否在矩形框内
+	        var nodecenter;
+	        var CenterX = parseInt(x1) + parseInt(x2);
+	        CenterX = parseInt(CenterX/2);
+	        var CenterY = parseInt(y1) + parseInt(y2);
+	        CenterY = parseInt(CenterY/2);
+	        //console.log(x1,y1,x2,y2,CenterX,CenterY);
+	        var length = inPutNodes.length;
+	        for(var i = 0; i < length; i++){
+	            var node = inPutNodes[i];
+	            var borderLeftX = parseInt(node.centerX) - parseInt(parseInt(node_WIDTH)/2);
+	            var borderRightX = parseInt(node.centerX) + parseInt(parseInt(node_WIDTH)/2);
+	            var borderTopY = parseInt(node.centerY) - parseInt(parseInt(node_HEIGHT)/2);
+	            var borderBottomY = parseInt(node.centerY) + parseInt(parseInt(node_HEIGHT)/2);
+	            if((CenterX >= borderLeftX && CenterX <= borderRightX) && (CenterY >= borderTopY && CenterY <= borderBottomY)){
+	                nodecenter = node;
+	            }
+	        }
+	        /*if(nodecenter){
+	            var borderLeftX = parseInt(nodecenter.centerX) - parseInt(parseInt(node_WIDTH)/2);
+	            var borderRightX = parseInt(nodecenter.centerX) + parseInt(parseInt(node_WIDTH)/2);
+	            context.beginPath();
+	            context.moveTo(x1, y1);
+	            context.lineTo(borderLeftX, y2);
+	            context.closePath();
+	            context.stroke();
+	            context.beginPath();
+	            context.moveTo(borderRightX, y2);
+	            context.lineTo(x2, y2);
+	            context.closePath();
+	            context.stroke();
+	        }else{
+	            context.beginPath();
+	            context.moveTo(x1, y1);
+	            context.lineTo(x2, y2);
+	            context.closePath();
+	            context.stroke();
+	        }*/
+	        context.beginPath();
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.closePath();
+            context.stroke();
+	    }
+		
+		//没有toNode的画线条的方法
+		function drawLineNotoNode(context, pointArray) {
+		    var length = pointArray.length;
+		    length = length % 2 ? (length - 1) / 2 : length / 2;
+		    for (var k = 0; k < length; k++) {
+		        context.strokeStyle = line_color;
+		        context.beginPath();
+		        if (k == (length - 1)) {
+		            //画箭头
+		            var pointX1 = parseInt(pointArray[k * 2 - 2]);
+		            var pointY1 = parseInt(pointArray[k * 2 - 1]);
+		            var pointX2 = parseInt(pointArray[k * 2]);
+		            var pointY2 = parseInt(pointArray[k * 2 + 1]);
+		            var theta = Math.atan((pointY2 - pointY1) / (pointX2 - pointX1));
+		            theta += ((pointX2 >= pointX1) ? 90 : -90) * Math.PI / 180;
+		            drawLineHead(context, pointX2, pointY2, theta);
+		        } else {
+		            var pointX1 = parseInt(pointArray[k * 2]);
+		            var pointY1 = parseInt(pointArray[k * 2 + 1]);
+		            var pointX2 = parseInt(pointArray[(k + 1) * 2]);
+		            var pointY2 = parseInt(pointArray[(k + 1) * 2 + 1]);
+		            drawLine(context, pointX1, pointY1, pointX2, pointY2);
+		        }
+		    }
+		}
+		//放大或者缩小按钮
+		function MaxOrMinBtn(contextbtn,canvas,color1,color2,isMax){
+			canvas.width = 30;
+			canvas.height = 30;
+			canvas.fontSize = "20";
+			contextbtn.strokeStyle = color1;
+			contextbtn.beginPath();
+			contextbtn.arc(15,15,15,0,Math.PI*2);
+			contextbtn.closePath();
+			contextbtn.stroke();
+			contextbtn.strokeStyle = color2;
+			contextbtn.beginPath();
+			contextbtn.moveTo(9,15);
+			contextbtn.lineTo(21,15);
+			contextbtn.closePath();
+			contextbtn.stroke();
+			if(isMax){
+				contextbtn.beginPath();
+				contextbtn.moveTo(15,9);
+				contextbtn.lineTo(15,21);
+				contextbtn.closePath();
+				contextbtn.stroke();
+			}
+		}
+
+		$(document).ready(function(){
+			// 页面初始化开始
+			var clientHeight = $(window.parent).height(),
+				clientWidth = $(window.parent).width();
+			$('#panle').css({height:clientHeight+'px',width:clientWidth+'px'});
+			$('.dsn-page-content').css({height:(clientHeight-48)+'px'});
+			//调用函数,请求xml文件地址，得到xml数据
+			canvas.width = clientWidth;
+		    canvas.height = clientHeight;
+		    context.lineWidth = line_weight;
+		    
+			getXMLDatas();
+			var activeColor = "#79D1F1";
+			var normalColor = "#7E7E7C";
+			var textColor = "red";
+			MaxOrMinBtn(contextMax,canvasMax,activeColor,"red",true);
+			MaxOrMinBtn(contextMin,canvasMin,activeColor,"red",false);
+			// 页面初始化结束
+			
+			// home按钮点击事件
+			$('.go-back').click(function(){
+				var slideout = new SlippageUnload();
+			});
+			
+			$("#canvasMax").click(function(){
+				$("#canvas").attr("style","height:auto;width:auto");
+				MaxOrMinBtn(contextMax,canvasMax,normalColor,normalColor,true);
+				MaxOrMinBtn(contextMin,canvasMin,activeColor,textColor,false);
+				$("#canvasMax").parent(".control").css("cursor","auto");
+				$("#canvasMin").parent(".control").css("cursor","default");
+			});
+			$("#canvasMin").click(function(){
+				$("#canvas").attr("style","height:auto;width:100%");
+				MaxOrMinBtn(contextMin,canvasMin,normalColor,normalColor,false);
+				MaxOrMinBtn(contextMax,canvasMax,activeColor,textColor,true);
+				$("#canvasMax").parent(".control").css("cursor","default");
+				$("#canvasMin").parent(".control").css("cursor","auto");
+			});
+		});
+	</script>
+</body>

@@ -1,0 +1,58 @@
+#list-content{
+	padding: 0 11px;
+}
+.moa-dsn-dblist>li{
+	font-family: "Microsoft YaHei","微软雅黑";
+	padding: 17px 7px;
+	display: block;
+	border-bottom: 1px #efefef solid;
+	list-style: none;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #435e82;
+}
+.item-title{
+	padding: 11px 0;
+	/* border-bottom: 1px #cecece solid; */
+	color: #08728A;
+	/* font-weight: bold; */
+	background-color: #4E89ED;
+	color: #fff;
+}
+.team-title{
+	float: left;
+	width: 40%;
+	padding: 7px 0;
+	text-indent: 11px;
+}
+.team-text{
+	float: left;
+	width: 60%;
+	padding: 7px 0;
+}
+.list-item:visited{
+	background-color: #bbb;
+	color: #fff;
+	transition: all 0s;
+}
+.list-item{
+	float: left;
+	width: 100%;
+	margin-top: 11px;
+	/*border-top: 1px #777 solid;*/
+	/*border-bottom: 1px #777 solid;*/
+    box-shadow: 0 0 1px #999;
+    border-radius: 3px;
+    overflow: hidden;
+    color: #9F9F9F;
+    background-color: #fff;
+    transition: all 5s;
+}
+.list-item:last-child{
+	margin-bottom: 60px;
+}
+.dsn-page-content{
+	background-color: #F0F0F0;
+}

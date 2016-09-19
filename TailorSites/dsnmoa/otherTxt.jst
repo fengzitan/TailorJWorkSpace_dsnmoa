@@ -1,0 +1,33 @@
+<%= include('otherTxt.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,
+	minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta charset="utf-8">
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/jgdge.css"/>
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage-unload.js"></script>
+	<title>移动OA附件在线阅读</title>
+</head>
+<body>
+	<div class="top_content">
+		<div class="top_left" onclick="closeOpintionDoc();">
+			<img rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>img/bock_no_03.png">
+		</div>
+		<div class="filetitle">
+			移动OA附件在线阅读
+		</div>
+	</div>
+	<div class="maindiv">
+		<%=txt%>
+	</div>
+	<script type="text/javascript">
+		function closeOpintionDoc(){
+			var slideout = new SlippageUnload({});
+		}
+	</script>
+</body>
+</html>

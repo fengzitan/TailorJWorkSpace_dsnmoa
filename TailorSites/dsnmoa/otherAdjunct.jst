@@ -1,0 +1,71 @@
+<% include("otherAdjunct.js"); %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,
+		minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<title>移动OA附件在线阅读</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+		<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/jgdge.css"/>
+		<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/sele_wic"></script>
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/emis.js"></script>
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/business/page.util.js"></script>
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/business/domino.page.opinion.js"></script>
+	    <script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage-unload.js"></script>
+		<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage-load.js"></script>
+		<script>	
+			$(function() {
+				//页面推入
+				// leftSlidIn("#doc-panel");
+
+				//居中
+				$(document).ready(function() {
+					var wic_yes = $(document.body).width();
+					$('.yes_circle').css('left', (wic_yes * 0.9) * 0.5 - 45);
+				});
+			});
+
+
+
+			function closeOpintionDoc() {
+				var slideout = new SlippageUnload({'show':'doc-panel'});
+			}
+			
+			function readByOnline() {
+				var resRead = '<%=readByOnlineUrl%>';
+				var json = eval("(" + resRead + ")");
+				if (json.statusCode == "200") {
+					var url = '<%=TAILOR_BASE_URL%>' + json.url
+					// var slidein = new SlippageLoad({url:url,hide:'#panel'})
+					window.location.href = url;
+					// window.open(url);
+				} else {
+					showMessageDialog(json.message);
+					closeOpintionDoc();
+				}
+			}
+
+		</script>
+		<style>
+			#panel{
+				display: none;
+			}
+		</style>
+	</head>
+	<body onload="readByOnline();">
+		<div id="panel">
+			<div class="top_content">
+				<div class="top_left" onclick="closeOpintionDoc();">
+					<img rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>img/bock_no_03.png">
+				</div>
+				<div class="filetitle">
+					移动OA附件在线阅读
+				</div>
+			</div>
+			<div><center><div class="dialog-btn" onclick="readByOnline();">点击在线阅读</div></center></div>
+		</div>
+	</body>
+</html>

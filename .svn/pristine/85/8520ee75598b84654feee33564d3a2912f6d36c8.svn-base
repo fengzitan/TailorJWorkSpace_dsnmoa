@@ -1,0 +1,73 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+body{
+	background-color: #fff;
+	font-size: 16px;
+	font-family: "Microsoft YaHei","微软雅黑";
+}
+#panle{
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	overflow: hidden;
+}
+#panle .ehr-page-header{
+	position: relative;
+	display: block;
+	height: 48px;
+	overflow: hidden;
+	width: 100%;
+}
+#panle .ehr-page-content{
+	position: relative;
+	display: block;
+	width: 100%;
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+.ehr-page-header{
+	position: relative;
+	height: 48px;
+	background-color: #2b3849;
+}
+.ehr-page-header h4{
+	font-family: '微软雅黑';
+	font-size: 22px;
+	line-height: 48px;
+	padding:0 48px;
+	color: #fff;
+	font-weight: normal;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.center{
+	text-align: center;
+}
+.ehr-page-header a{
+	display: block;
+	width: 48px;
+	height: 48px;
+	text-align: center;
+	font-size: 22px;
+	color: #fff;
+	line-height: 48px;
+}
+.ehr-page-header .go-back{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.ehr-page-header .go-home{
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.go-back .icon{
+	width: 14px;
+	height: 20px;
+	margin-top: 14px;
+}

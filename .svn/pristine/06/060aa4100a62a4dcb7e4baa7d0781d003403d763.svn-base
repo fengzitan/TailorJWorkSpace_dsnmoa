@@ -1,0 +1,359 @@
+{
+	"content_scripts": [
+		{
+			"description": "login-get",
+			"matches": [ 
+				"\\/workbench\\/login$"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "login.jst"
+		},
+		{
+			"description": "updatemodel",
+			"matches": [ 
+				"\\/DB\\/update"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "server.js"
+		},
+		{
+			"description": "login-post",
+			"matches": [ 
+				"\\/workbench\\/login\\.action"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "login.js"
+		},
+		{
+			"description": "index",
+			"matches": [ 
+				"\\/workbench\\/Index",
+				"\\/view\\/platform\\/main\\.do"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "index.jst"
+		},
+		{
+			"description": "dblist",
+			"matches": [ 
+				"\\/workbench\\/Dblist"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "todo.jst"
+		},
+		{
+			"description": "document-router",
+			"matches": [ 
+				"\\/workbench\\/workbench\\/pending\\.action"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.router.js"
+		},
+		{
+			"description": "document",
+			"matches": [ 
+				"\\/cmdi-workflow-dm",
+				"\\/cmdi-workflow-pm",
+				"\\/cmdi-workflow-im",
+				"\\/cmdi-workflow-hr",
+				"\\/cmdi-workflow-lam"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.jst"
+		},
+		{
+			"description": "document-comment",
+			"matches": [ 
+				"\\/TailorApi=cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.js"
+		},{
+			"description": "comment-table",
+			"matches": [ 
+				"\\/getTableInfo=cmdi-workflow-pm\\/purchase"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "commenttable.js"
+		},
+		{
+			"description": "choicePerson-view",
+			"matches": [ 
+				"\\/View-choicePerson=cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "choicePerson.view.jst"
+		},
+		{
+			"description": "choicePerson-moudel",
+			"matches": [ 
+				"\\/TailorApi=CP-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "choicePerson.view.js"
+		},
+		{
+			"description": "detail-view",
+			"matches": [ 
+				"\\/View-Detail-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "detailcontent.js"
+		},
+		{
+			"description": "detail-context",
+			"matches": [ 
+				"\\/Detail-context"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "detailcontext.js"
+		},
+		{
+			"description": "opnion-context",
+			"matches": [ 
+				"\\/Opinion-Text-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "opnioncontext.js"
+		},
+		{
+			"description": "choicePerson-tree",
+			"matches": [ 
+				"\\/Tailor-Api=Tree-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "choicePerson.tree.js"
+		},
+		{
+			"description": "document-submit-verify",
+			"matches": [ 
+				"\\/TailorApi-verify-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.submit.verify.js"
+		},
+		{
+			"description": "init DeptNotify",
+			"matches": [ 
+				"\\/Tailor-Api-deptnotify-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.deptnotify.js"
+		},
+		{
+			"description": "attach-context",
+			"matches": [ 
+				"\\/Attach-context"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "attachmentcontent.js"
+		},
+		{
+			"description": "login-out",
+			"matches": [ 
+				"\\/LoginOut-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "login.jst"
+		}
+		,
+		{
+			"description": "process-page",
+			"matches": [ 
+				"\\/ProcessURL-\\/process-web\\/processplatform\\/"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "processpage.jst"
+		}
+		,
+		{
+			"description": "yblist",
+			"matches": [ 
+				"\\/workbench\\/Yblist"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "haddo.jst"
+		}
+		,
+		{
+			"description": "Ydocument.router",
+			"matches": [ 
+				"\\/workbench\\/workbench\\/finished\\.action"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "haddocument.router.js"
+		}
+		,
+		{
+			"description": "dylist",
+			"matches": [ 
+				"\\/workbench\\/Dylist"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "toread.jst"
+		}
+		,
+		{
+			"description": "Ydocument.router",
+			"matches": [ 
+				"\\/workbench\\/workbench\\/viewing\\.action"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "toreaddocument.router.js"
+		}
+		,
+		{
+			"description": "我的办结",
+			"matches": [ 
+				"\\/workbench\\/Bjlist"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "todid.jst"
+		}
+		,
+		{
+			"description": "办结详情",
+			"matches": [ 
+				"\\/workbench\\/workbench\\/closed\\.action"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "tobj.router.js"
+		}
+		,
+		{
+			"description": "createNumbers",
+			"matches": [ 
+				"\\/Create-Number=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "number.router.js"
+		}
+		,
+		{
+			"description": "generateNumberAjax",
+			"matches": [ 
+				"\\/generateNumberAjax=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "generatenum.router.js"
+		}
+		,
+		{
+			"description": "isUsedNumber",
+			"matches": [ 
+				"\\/IsUsed=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "isusednumber.js"
+		}
+		,
+		{
+			"description": "updateCurrentNumberValue",
+			"matches": [ 
+				"\\/updateCurrentNumberValue=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "updatecurrentnumber.js"
+		}
+		,
+		{
+			"description": "isResetBizParameters",
+			"matches": [ 
+				"\\/IsReset-bizParameters=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "isresetbizparameters.js"
+		}
+		,
+		{
+			"description": "branchExamineEditFile",
+			"matches": [ 
+				"\\/branchExamineEditFile=cmdi-workflow"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "getbranchExamineEditFile.js"
+		}
+		,
+		{
+			"description": "document-submit-verify",
+			"matches": [ 
+				"\\/TailorApi-formsubmit-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.formsubmit.verify.js"
+		}
+		,
+		{
+			"description": "本地文件浏览",
+			"matches": [
+				 
+				"\\/attachment\\/result"
+			],
+			"delayed": true,
+			"instruction": "attachment.view.jst"
+		}
+		,
+		{
+			"description": "日志记录",
+			"matches": [ 
+				"workbench\\/logSrv$"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "logservice.js"
+		}
+		,
+		{
+			"description": "处理单中多余的表格",
+			"matches": [ 
+				"\\/RENLI-Resource-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.commenttable.js"
+		}
+		,
+		{
+			"description": "document-ishasperson",
+			"matches": [ 
+				"\\/TailorApi-ishasperson-cmdi-workflow-"
+			 ],
+			"delayed": true,
+			"filterable": true,
+			"instruction": "document.ishasperson.js"
+		}
+	]
+}

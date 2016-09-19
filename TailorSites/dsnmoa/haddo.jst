@@ -1,0 +1,275 @@
+<%=include('conf.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/base.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/dblist.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<title>设计院-我的已办</title>
+	<style type="text/css">
+	#pagenumbers ul ul,li{
+		list-style:none;
+		list-style-type:none;
+		float:left;
+		margin:0;
+		padding:0;
+		margin-left:4%;
+	}
+	#pagenumbers li{
+		cursor:pointer;
+	}
+	#pagenumbers li:hover{
+		cursor:pointer;
+		color: blue;
+	}
+	#counts:hover{
+		color:#000;
+	}
+	#inputNumbers{
+		width:20px;height:18px;
+	}
+	#searchGo{
+		width:24px;height:24px;background-color:#4E89ED;margin:0px;border:0;
+	}
+	/*返回顶端样式start-----cy*/
+	#toTop{
+		position: fixed;
+	    cursor: pointer;
+	    z-index: 9999;
+	    width: 60px;
+	    height: 60px;
+	    /* border: 1px #ccc solid; */
+	    bottom: 80px;
+	    right: 2px;
+	    border-radius: 7px;
+	    background-color: rgba(0,0,0,.3);
+	    color: #fff;
+	    text-align: center;
+	    line-height: 60px;
+	    font-size: 30px;
+	}
+	</style>
+</head>
+<body>
+	<div id="panle">
+		<div class="dsn-page-header">
+			<h4 class="center">我的已办</h4>
+			<a class="go-back fa fa-home"></a>
+			<!--<a class="go-home fa fa-filter"></a>-->
+		</div>
+		<div class="dsn-page-content">
+			<div id="list-content" style="position: relative;">	
+			</div>
+			<!-- 待办列表 -->
+		</div>
+	</div>
+	<!-- 返回顶端按钮 -->
+	<div id="toTop">↑</div>
+	<script type="text/javascript">
+		var root = '<%=ROOTURL%>',
+			tailor = '<%=TAILOR_BASE_URL%>';
+		var resourceUrl = '<%=LOCAL_RESOURCE_URL%>';//资源地址---cy---start
+		var root_dm = '<%=ROOTURL_DM%>';
+		var totopHeight = 160;
+		var totopWidth = 100;
+		var urlvalue = window.location.search;
+		if (urlvalue) {
+			var pageaid = urlvalue.split("=")[1];
+		};
+		pageaid = parseInt(pageaid);
+ 		//----end---cy
+		//定义总页数
+		var totalPages = 1;
+		// 跳转公文页面
+		function jumpDocument(url){
+			var url = tailor + url + "&pageaid=" + pageaid;
+			var slidein = new SlippageLoad({
+				url : url
+			});
+		}
+		// 打开公文-路由
+		function openDocument(data, logPara){
+			var urlPath = tailor + root + 'workbench/workbench/finished.action';
+			var parmas = JSON.parse(data);
+			//showLoadingMask();
+			//记录日志
+			sendLog(logPara);
+			$.ajax({
+				url : urlPath,
+				type : 'post',
+				timeout : 30000,
+				dataType : 'json',
+				data : parmas,
+				success : function(data){
+					hideLoadingMask();
+					console.log(data);
+					if(data.success){
+						console.log("打开路由:"+data.data);
+						jumpDocument(data.data);
+					}else{
+						showMessageDialog(data.message);
+					}
+				},
+				error : function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}
+		// 获取列表json数据
+		//-----修改 cy   page
+		function getListData(page){
+			showLoadingMask();
+			var urlPath = tailor + root + 'workbench/workbench/finishedlist.action?rowNum=15&appId=' + pageaid;
+			$.ajax({
+				url : urlPath,
+				type : 'post',
+				dataType : 'json',
+				timeout : 30000,
+				data : {
+					'_search' : false,
+					nd : $.now(),
+					rows : 15,
+					page : page,
+					sidx : 'docTitle',
+					sord : 'asc'
+				},
+				success : function(data){
+					hideLoadingMask();
+					if(data.success===undefined){
+						createListHtml(data);
+						totalPages = data.total;//----cy
+					}else{
+						showMessageDialog(data.text);
+					}
+					
+				},
+				error : function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}
+		// 创建待办html片段
+		function createListHtml(data){
+			console.log(data);
+			$("#toTop").show();
+			var data = data.rows;
+			var el = $('#list-content');
+			var infoNum = data.length;
+			for(i=0;i<infoNum;i++){
+				var logPara = {
+					level : 0,
+					title : data[i].docTitle,
+					name : data[i].ptName,
+					state : data[i].stateName,
+					type : "打开已办公文",
+					url : "",
+					method : "get",
+					from : "client",
+					succ : true,
+					msg : "",
+					desc : ""
+				};
+				var item = $('<div class="list-item">');
+				var title = $('<p class="item-title">').addClass('center');
+				title.text(data[i].docTitle).appendTo(item);
+				// ptName流程名称
+				var ptName = $('<div class="item-team">').appendTo(item).css('font-weight','bold');
+				ptName.append($('<div class="team-title">').text('流程名称'),$('<div class="team-text">').text(data[i].ptName));
+				// currentHandler当前处理人
+				var senderName = $('<div class="item-team">').appendTo(item);
+				senderName.append($('<div class="team-title">').text('当前处理人'),$('<div class="team-text">').text(data[i].currentHandler));
+				// stateName处理环节
+				var stateName = $('<div class="item-team">').appendTo(item);
+				stateName.append($('<div class="team-title">').text('处理环节'),$('<div class="team-text">').text(data[i].stateName));
+				//draferName起草人
+				// var draferName = $('<div class="item-team">').appendTo(item);
+				// draferName.append($('<div class="team-title">').text('起草人'),$('<div class="team-text">').text(data[i].draferName));
+				// startTime接收时间
+				var startTime = $('<div class="item-team">').appendTo(item);
+				startTime.append($('<div class="team-title">').text('接收时间'),$('<div class="team-text">').text(data[i].startTime));
+				item.appendTo(el).click(function(){
+					openDocument($(this).attr('data'), logPara);
+				}).attr('data',JSON.stringify({
+					bizId : data[i].dominoDocid,
+					bizCode : data[i].dominoServerFqdn,
+					currentStep : data[i].stateId,
+					processId : data[i].processInstanceid,
+					activityId : data[i].activityInstanceid,
+					workItemId : data[i].id,
+					delegationType : data[i].delegationType,
+					userId : data[i].handlerUserid,
+					orgId : data[i].origHandlerOrgid,
+					positionId : data[i].origHandlerRoleid,
+					delegationUserId : data[i].handlerUserid,
+					ptName : '',
+					docTitle : '',
+					drafter : '',
+					sendTimeStart : '',
+					sendTimeEnd : ''
+				}));
+			}
+			if(0 === infoNum){
+				el.append($("<div>暂时没有已办公文</div>"));
+			}
+		}
+		
+		function sendLog(para){
+			var logSrvPath = tailor + root + 'workbench/logSrv';
+			$.ajax({
+				url : logSrvPath,
+				type : 'post',
+				dataType : 'json',
+				timeout : 30000,
+				data : JSON.stringify(para)
+			});
+		}
+
+		$(document).ready(function(){
+			// 页面初始化开始
+			var clientHeight = $(window.parent).height(),
+				clientWidth = $(window.parent).width();
+			$('#panle').css({height:clientHeight+'px',width:clientWidth+'px'});
+			$('.dsn-page-content').css({height:(clientHeight-48)+'px'});
+			// 页面初始化结束
+			getListData(1);//xiugai ----cy
+			$('*[clickurl]').click(function(){
+				var url = tailor + root + $(this).attr('clickurl');
+				var slidein = new SlippageLoad({
+					url : url
+				});
+			});
+			// home按钮点击事件
+			$('.go-back').click(function(){
+				var slideout = new SlippageUnload();
+			});
+			
+			//滚动条 ---cy
+			var count = 1;
+			var scrolltop = 0, scrollheight = 0, divheight = $(".dsn-page-content").height();
+			$(".dsn-page-content").scroll(function(){
+				scrolltop = $(this)[0].scrollTop;
+				scrollheight = $(this)[0].scrollHeight;
+				if (scrolltop + divheight >= scrollheight && count <= totalPages) {
+					count++;
+					getListData(count);
+				};
+			});
+			//"返回顶端"点击事件  ----cy
+			$("#toTop").click(function(){
+				$(".dsn-page-content")[0].scrollTop =0;
+			});
+		});
+		
+	</script>
+</body>
+</html>

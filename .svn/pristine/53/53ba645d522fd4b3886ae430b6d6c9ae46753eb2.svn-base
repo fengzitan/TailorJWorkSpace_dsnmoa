@@ -1,0 +1,16 @@
+@charset "utf-8";
+@import url(app.css);
+
+#on,#on1,#on2,#on3,#on4,#on5,#on6,#on7 {
+	display: inline-block;
+	position: relative;
+	top: 1.1rem;
+	width: 3.2rem;
+	height: 1.6rem;
+	float: right;
+}
+.message .warn {
+    color: #74859c;
+    position: relative;
+    float: right;
+}

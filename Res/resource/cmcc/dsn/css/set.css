@@ -1,0 +1,110 @@
+@charset "utf-8";
+/*全局设置*/
+html{font-size: 62.5%}
+*{margin: 0 auto;padding: 0;}
+img{width: 100%}
+body{max-width: 750px;font-family: "微软雅黑"}
+/*局部设置*/
+.top_nav {
+    position: relative;
+    background-color: #2b3849;
+    font-size: 1.8rem;
+    color: #ffffff;
+    padding-top: 10px;
+    text-align: center;
+    padding: 1rem 0;
+}
+/* .top_nav img {
+    width: 13px;
+    position: absolute;
+    left: 10px;
+    top: 12px;
+} */
+ul.main_set {
+    width: 100%;
+}
+.main_set .set_content {
+    list-style: none;
+    border-bottom: 1px solid #e4e9ec;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: relative;
+}
+.set_content .i_one {
+    width: 31px;
+    vertical-align: middle;
+    padding-left: 3%;
+}
+.set_content p {
+    display: inline-block;
+    vertical-align: middle;
+    color: #74859c;
+    font-size: 2rem;
+    margin-left: 10px;
+    font-weight: bold;
+    position: relative;
+    top:1px;
+}
+.set_content .i_two {
+    width: 12px;
+    vertical-align: middle;
+	margin-top: -11px;
+    right: 3%;
+    position: absolute;
+    top: 50%;
+}
+/*菜单栏*/
+.footer{padding-top: 20px;font-size:62.5%;max-width: 750px;position: fixed;bottom:0;background-color: #2b3849;font-size: 0;width: 100%;text-align: center;padding:0.45rem 0;position: fixed;bottom: 0;}
+.a ul li{width:24.68%;display: inline-block;}
+.new{font-size: 1.6rem;color: #abafb3;}
+.one{width:20px;}
+.nu {
+    background-color: #ff3e3e;
+    font-size: 1rem;
+    display: inline-block;
+    position: absolute;
+    width: 1.5rem;
+    border-radius: 1rem;
+    top: 2px;
+    left: 12%;
+    line-height: 1.5rem;
+    color: #ffffff;
+}
+
+.wic_sele {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;
+}
+.wic_sele {
+    position: absolute;
+    bottom: 21rem;
+    width: 92%;
+    background-color: #ffffff;
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: 14px;
+    font-size: 15px;
+    background-color: #161E29;
+    margin-left: 4%;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+.wic_sele p {
+    color: #ffffff;
+    padding-bottom: 2rem;
+}
+.wic_sele .sele_yes {
+    display: inline-block;
+    width: 49%;
+    color: #ffffff;
+   /* border-right: 1px solid #ffffff;*/
+}
+.wic_sele .sle_no {
+    display: inline-block;
+    width: 49%;
+    color: #ffffff;
+    border-right: 1px solid #ffffff;
+}
+

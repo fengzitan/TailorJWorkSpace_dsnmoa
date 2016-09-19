@@ -1,0 +1,174 @@
+.tab-menu{
+	background-color:#2b3849;
+	color: #fff;
+	height: 100%; 
+}
+.tab-menu>li{
+	position: relative;
+	float: left;
+	width: 33%;
+	height: 100%;
+}
+.tab-menu>li:before{
+	content: '';
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 99;
+	background-color: rgba(43,56,73,0.4);
+}
+.tab-menu>li.checked:before{
+	background-color: rgba(0,0,0,0);
+}
+.tab-menu>li:after{
+	content: '';
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 7px;
+	width: 2px;
+	height: 46px;
+	background-color: #364252;
+}
+.tab-menu>li>i{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+}
+.tab-menu>li>i.message{
+	background: url('../img/sh_6_bu2.png') no-repeat center center;
+	background-size: 24px 24px;
+}
+.tab-menu>li>i.conmunite{
+	background: url('../img/peop_3.png') no-repeat center center;
+	background-size: 24px 24px;
+}
+.tab-menu>li>i.app{
+	background: url('../img/apply_2.png') no-repeat center center;
+	background-size: 24px 24px;
+}
+.tab-menu>li>i.set{
+	background: url('../img/set_03.png') no-repeat center center;
+	background-size: 24px 24px;
+}
+.tab-menu>li>p{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	padding: 2px 0;
+	text-align: center;
+	font-weight: normal;
+}
+#panle .dsn-page-footer{
+	height: 60px;
+}
+#app ul li,#set ul li,#message ul li{
+    border-bottom: 1px #ccc solid;
+    font-size: 22px;
+    padding: 17px 7px;
+    color: #74859c;
+    position: relative;
+    text-indent: 60px;
+}
+#app ul li:before,#set ul li:before,#message ul li:before{
+	content: '';
+	position: absolute;
+	display: block;
+	width: 52px;
+	height: 52px;
+	top: 50%;
+	margin-top: -26px;
+	left: 7px;
+}
+#app ul li.on:after {
+	transition: all .3s;
+	-moz-transition: all .3s; /* Firefox 4 */
+	-webkit-transition: all .3s; /* Safari 和 Chrome */
+	-o-transition: all .3s; /* Opera */
+    box-shadow: #00f 0 0 0 12px inset;
+}
+#app ul li:after {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 48px;
+	height: 24px;
+	top: 50%;
+	margin-top: -12px;
+	right: 21px;
+	background-color: #ccc;
+	border-radius: 16px;
+	transition: all .3s;
+	-moz-transition: all .3s; /* Firefox 4 */
+	-webkit-transition: all .3s; /* Safari 和 Chrome */
+	-o-transition: all .3s; /* Opera */
+}
+#app ul li>i.role{
+	position: absolute;
+	display: block;
+	width: 22px;
+	height: 22px;
+	right: 46px;
+	background: #fff;
+	top: 50%;
+	margin-top: -11px;
+	border-radius: 50%;
+	z-index: 100;
+	transition: all .3s;
+	-moz-transition: all .3s; /* Firefox 4 */
+	-webkit-transition: all .3s; /* Safari 和 Chrome */
+	-o-transition: all .3s; /* Opera */
+}
+#app ul li.on>i.role{
+	right: 22px;
+	transition: all .3s;
+	-moz-transition: all .3s; /* Firefox 4 */
+	-webkit-transition: all .3s; /* Safari 和 Chrome */
+	-o-transition: all .3s; /* Opera */
+}
+#set ul li:after,#message ul li:after{
+	content: '';
+	position: absolute;
+	display: block;
+	width: 52px;
+	height: 52px;
+	top: 50%;
+	margin-top: -26px;
+	right: 7px;
+	background:url('../img/sh_06.jpg') no-repeat center;
+	background-size: 10px 20px;
+}
+#app ul li.my-todo:before,#set ul li.my-todo:before,#message ul li.my-todo:before{
+	background:url('../img/shou_03.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#app ul li.my-toread:before,#set ul li.my-toread:before,#message ul li.my-toread:before{
+	background:url('../img/sh_12.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#app ul li.my-done:before,#set ul li.my-done:before,#message ul li.my-done:before{
+	background:url('../img/sh_14.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#app ul li.my-over:before,#set ul li.my-over:before,#message ul li.my-over:before{
+	background:url('../img/ye_06.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#app ul li.my-mail:before,#set ul li.my-mail:before,#message ul li.my-mail:before{
+	background:url('../img/sh_18.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#app ul li.my-news:before,#set ul li.my-news:before,#message ul li.my-news:before{
+	background:url('../img/sh_16.jpg') no-repeat center;
+	background-size: 30px 30px;
+}
+#set ul li.my-about:before,#message ul li.my-about:before{
+	background:url('../img/about.png') no-repeat center;
+	background-size: 30px 30px;
+}

@@ -1,0 +1,373 @@
+@charset "utf-8";
+@import url(all.css);
+/* EMIS移动版样式 */
+
+/* 输入框内容清除Button */
+span.input-clear-btn {
+	/*display: none;*/
+	position: absolute;
+	right: 0;
+	width: 3rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	color: #bbb;
+	font-size: 1.2rem;
+}
+/* 登录视图 */
+.login-page {
+	background-image: url(../img/login-bg-cute.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.login-page .context {
+	height: inherit;
+	padding-left: 2.4rem;
+	padding-right: 2.4rem;
+}
+/* 表单顶部 */
+.login-form-top {
+	padding-top: 3rem;
+	text-align: center;
+}
+.pwd-change-form-top {
+	height: 6rem;
+	background-color: #e8ecee;
+}
+.pwd-change-form-info {
+	text-align: center;
+}
+.pwd-change-form-info p:first-child {
+	line-height: 3rem;
+	color: #74859c;
+}
+.pwd-change-form-info p:last-child {
+	line-height: 2rem;
+	color: #ff4949;
+}
+/* Logo */
+.app-logo {
+	display: inline-block;
+	width: 4rem;
+	height: 4rem;
+	background-image: url(../img/logo.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+/* App名称 */
+.app-name {
+	height: 3rem;
+	line-height: 3rem;
+	font-size: 1.8rem;
+	color: #0c6cff;
+}
+/* 表单用户名、口令栏 */
+.login-form-item {
+	display: box;
+	display: -webkit-box;
+	padding: .8rem 0 0;
+}
+.login-form-item:first-child {
+	padding-top: 13.2rem;
+}
+@media screen and (max-height: 600px) {
+	.login-form-item:first-child {
+		padding-top: 11.2rem;
+	}
+}
+.pwd-change-form-item {
+	display: box;
+	display: -webkit-box;
+	margin: .8rem 2.4rem 0;
+}
+.pwd-change-form-item.underline {
+	border-color: #f1f1f3;
+}
+.pwd-change-form-item .input-field,
+.login-form-item .input-field {
+	position: relative;
+	-webkit-box-flex: 1;
+	flex: 1;
+}
+.pwd-change-form-item input,
+.pwd-change-form-item input:focus,
+.login-form-item input,
+.login-form-item input:focus {
+	width: 100%;
+	height: 3rem;
+	line-height: 3rem;
+	border: 0;
+	border-radius: 0;
+	outline: none;
+	-webkit-appearance: none;
+	background-color: transparent;
+}
+/* 输入框标识图标 */
+.pwd-change-form-item .input-icon,
+.login-form-item .input-icon {
+	width: 3rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	color: #0c6cff;
+	font-size: 1.2rem;
+}
+.pwd-change-form-item .input-icon img {
+	vertical-align: middle;
+	width: 1.4rem;
+	height: 1.4rem;
+}
+/* 清除输入框文本组件定制 */
+.pwd-change-form-item span {
+	font-size: .8rem;
+}
+.pwd-change-form-item .must-input-tag {
+	height: 3rem;
+	line-height: 3rem;
+	color: #ff4949;
+}
+/* 表单验证码栏 */
+.login-form-item .vc-input-field {
+	padding-left: 10px;
+	width: 40%;
+}
+.login-form-item .vc-image {
+	margin-left: 1rem;
+	width: 20%;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	background-color: #fff;
+}
+.login-form-item span {
+	height: 3rem;
+	line-height: 3rem;
+	color: #bbb;
+	font-size: .8rem;
+	font-weight: bold;
+}
+.vc-image img {
+	height: 1.25rem;
+	font-size: .6rem;
+}
+/* 登录Button */
+.login-btn {
+	margin: 1.4rem 0;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: #0c6cff;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+}
+/* 密码修改Button */
+.pwd-change-btn {
+	margin: 1.8rem 2.4rem 0;
+	height: 3.4rem;
+	line-height: 3.4rem;
+	background-color: #0c6cff;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+}
+/* 应用菜单List */
+.menu-list {
+	padding: .4rem .8rem 0;
+}
+.menu-list-item {
+	display: -webkit-box;
+	display: box;
+	height: 4rem;
+	line-height: 4rem;
+	border-bottom: 1px solid #efefef;
+}
+.menu-icon {
+	width: 4rem;
+	height: 4rem;
+	line-height: 4rem;
+	text-align: center;
+	background-color: #10a0ea;
+	color: #fff;
+	font-size: 2rem;
+}
+.menu-title {
+	-webkit-box-flex: 1;
+	color: #999;
+}
+.menu-title span {
+	margin-left: .4rem;
+	font-size: 1.4rem;
+}
+.main-tab-icon.icon-message {
+	background-image: url(../img/tab-icon-message.png);
+}
+.main-tab-icon.icon-contact {
+	background-image: url(../img/tab-icon-contact.png);
+}
+.main-tab-icon.icon-appman {
+	background-image: url(../img/tab-icon-appman.png);
+}
+.main-tab-icon.icon-set {
+	background-image: url(../img/tab-icon-set.png);
+}
+/* WebApp装载视图层 */
+.window-frame {
+	z-index: 100;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: #fff;
+}
+/* 待办、待阅List */
+.done-list,
+.todo-list {
+	padding: .4rem .8rem 0;
+}
+.done-list-item,
+.todo-list-item {
+	height: 4rem;
+	border-bottom: 1px solid #efefef;
+}
+.document-title {
+	height: 2rem;
+	line-height: 2rem;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	color: #435e82;
+}
+.document-title.disabled {
+	color: #ced6df;
+}
+.document-description {
+	height: 2rem;
+	line-height: 2rem;
+	font-size: .6rem;
+	color: #a7b3c3;
+}
+.document-description .sender {
+}
+.document-description .date {
+	margin-left: .4rem;
+}
+/* 文档装载视图层 */
+.document-frame {
+	z-index: 100;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: #fff;
+}
+.writeid-frame{
+	position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    border: 0;
+}
+/* 响应消息视图层 */
+.message-layout {
+	z-index: 200;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: rgba(0,0,0,.4);
+}
+.message-dialog {
+	position: relative;
+	top: 30%;
+	left: 0;
+	margin: 0 10%;
+	min-height: 30%;
+	border-radius: 5px;
+	background-color: #fff;
+}
+.message-dialog .message-icon {
+	position: absolute;
+	width: 6rem;
+	height: 6rem;
+	line-height: 6rem;
+	top: -3rem;
+	left: 50%;
+	margin-left: -3rem;
+	border-radius: 50%;
+	color: #fff;
+	text-align: center;
+	font-size: 3.2rem;
+}
+.message-icon.success {
+	background-color: #0c6cff;
+}
+.message-icon.false {
+	background-color: #ff3f3e;
+}
+.message-icon.warn {
+	background-color: #ff3f3e;
+}
+.message-dialog .message-txt {
+	padding-top: 3.5rem;
+	line-height: 3rem;
+	text-align: center;
+	font-size: 1.6rem;
+}
+.message-dialog .message-small-txt {
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	font-size: .8rem;
+}
+.message-dialog .left-btn {
+	display: inline-block;
+	position: relative;
+	left: 15%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #0c6cff;
+	border-radius: 3px;
+}
+.message-dialog .middle-btn {
+	display: inline-block;
+	position: relative;
+	left: 50%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	margin-left: -3rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #0c6cff;
+	border-radius: 3px;
+}
+.message-dialog .right-btn {
+	display: inline-block;
+	position: relative;
+	right: 15%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #e8ecee;
+	border-radius: 3px;
+}

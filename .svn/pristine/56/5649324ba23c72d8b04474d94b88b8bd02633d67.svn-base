@@ -1,0 +1,166 @@
+$(function(){
+    //   弹窗选择人-one
+    var ii=0;
+    $('#one .section .sle_ok').click(function(){
+        var clic_null=$(this).html()
+        if(clic_null==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            ii=ii+1;
+            $('#one .one_content .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $(this).html("");
+            ii=ii+1;
+            $('#one .one_content .sle_ok').html("");
+        }
+    })
+    var less_num=0;
+    $('#one .one_content .sle_ok').click(function(){
+        var i=0;
+        $('#one li .sle_ok').each(function(){
+            var clic_name=$(this).html();
+            if(clic_name=='<img src="img/sele_yes_i_03.png">'){
+                i=i+1;;
+                less_num=i;
+            }else{
+                less_num=less_num;
+            }
+        })
+        var clic_null_two=$(this).html()
+        if(clic_null_two==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            less_num=less_num+1;
+        }else{
+            $(this).html("");
+            less_num=less_num-1;
+        }
+        if(less_num>0){
+            $('#one .section .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $('#one .section .sle_ok').html('');
+        }
+    })
+    var peop_look_less=0;
+    $('#one .sele_less').click(function(){
+        if(peop_look_less%2==0){
+            $('#one .sele_less img').css('top','3px');
+            $(this).html("<img src='img/click_no_less_03.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#one .one_content').show();
+        }else{
+            $('#one .sele_less img').css('top','0px');
+            $(this).html("<img src='img/click_less_07.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#one .one_content').hide();
+        }
+    })
+    //   弹窗选择人-two
+    var iit=0;
+    $('#two .section .sle_ok').click(function(){
+        var clic_null=$(this).html()
+        if(clic_null==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            ii=ii+1;
+            $('#two .one_content .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $(this).html("");
+            ii=ii+1;
+            $('#two .one_content .sle_ok').html("");
+        }
+    })
+    var less_numt=0;
+    $('#two .one_content .sle_ok').click(function(){
+        var it=0;
+        $('#two li .sle_ok').each(function(){
+            var clic_name=$(this).html();
+            if(clic_name=='<img src="img/sele_yes_i_03.png">'){
+                it=it+1;;
+                less_numt=it;
+            }else{
+                less_numt=less_numt;
+            }
+        })
+        var clic_null_two=$(this).html()
+        if(clic_null_two==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            less_numt=less_numt+1;
+        }else{
+            $(this).html("");
+            less_numt=less_numt-1;
+        }
+        if(less_numt>0){
+            $('#two .section .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $('#two .section .sle_ok').html('');
+        }
+    })
+    var peop_look_lesst=0;
+    $('#two .sele_less').click(function(){
+        if(peop_look_less%2==0){
+            $('#two .sele_less img').css('top','3px');
+            $(this).html("<img src='img/click_no_less_03.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#two .one_content').show();
+        }else{
+            $('#two .sele_less img').css('top','0px');
+            $(this).html("<img src='img/click_less_07.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#two .one_content').hide();
+        }
+    })
+    //   弹窗选择人-three
+
+    var iie=0;
+    $('#three .section .sle_ok').click(function(){
+        var clic_null=$(this).html()
+        if(clic_null==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            ii=ii+1;
+            $('#three .one_content .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $(this).html("");
+            ii=ii+1;
+            $('#three .one_content .sle_ok').html("");
+        }
+    })
+
+    var less_nume=0;
+    $('#three .one_content .sle_ok').click(function(){
+        var it=0;
+        $('#three li .sle_ok').each(function(){
+            var clic_name=$(this).html();
+            if(clic_name=='<img src="img/sele_yes_i_03.png">'){
+                it=it+1;;
+                less_numt=it;
+            }else{
+                less_numt=less_numt;
+            }
+        })
+        var clic_null_two=$(this).html()
+        if(clic_null_two==""){
+            $(this).html("<img src='img/sele_yes_i_03.png'/>");
+            less_numt=less_numt+1;
+        }else{
+            $(this).html("");
+            less_numt=less_numt-1;
+        }
+        if(less_numt>0){
+            $('#three .section .sle_ok').html("<img src='img/sele_yes_i_03.png'/>");
+        }else{
+            $('#three .section .sle_ok').html('');
+        }
+    })
+    var peop_look_lesse=0;
+    $('#three .sele_less').click(function(){
+        if(peop_look_less%2==0){
+            $('#three .sele_less img').css({'top':'0px','top':'3px'});
+            $(this).html("<img src='img/click_no_less_03.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#three .one_content').show();
+        }else{
+            $('#three .sele_less img').css({'top':'3px','top':'0px'});
+            $(this).html("<img src='img/click_less_07.png'/>");
+            peop_look_less=peop_look_less+1;
+            $('#three .one_content').hide();
+        }
+    })
+})

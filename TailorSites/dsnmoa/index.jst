@@ -1,0 +1,556 @@
+<%=include('index.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/dsn/base.css"/>
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/dsn/index.css">
+	<title>首页</title>
+	<style>
+		.tips{
+			position: fixed;
+		    display: block;
+		    width: 80%;
+		    /* height: 44px; */
+		    background-color: rgba(255,255,2555,1);
+		    top: 50%;
+		    left: 10%;
+		    margin-top: -21px;
+		    /* border-radius: 3px; */
+		    /* color: #fff; */
+		    color: #00f;
+		    padding: 11px 0;
+		    text-align: center;
+		    /* box-shadow: 0 0 5px #000; */
+		    z-index: 10000;
+		    outline: 1px #000 solid;
+		}
+		.tips-before{
+			position: absolute;
+			display: block;
+			height: 100%;
+			top: 0;
+			left: 0;
+			width: 0;
+		}
+		.dsn-page-content>div{
+			display: none;
+		}
+		#conmunite .person-list li{
+			padding: 17px 21px;
+		    border-bottom: 1px #91B2CD solid;
+		    color: #494E50;
+		    font-weight: bold;
+		    position: relative;
+		}
+		#conmunite .person-list li:after{
+			content: '';
+			position: absolute;
+			display: block;
+			height: 10px;
+			width: 10px;
+			top: 50%;
+			margin-top: -6px;
+			right: 27px;
+			border-top: 2px #000 solid; 
+			border-right: 2px #000 solid;
+			transform:rotate(45deg);
+			-ms-transform:rotate(45deg); /* IE 9 */
+			-moz-transform:rotate(45deg); /* Firefox */
+			-webkit-transform:rotate(45deg); /* Safari and Chrome */
+			-o-transform:rotate(45deg); /* Opera */ 
+		}
+		#conmunite .conmunite-show{
+			position: fixed;
+			display: block;
+			width: 100%;
+			height: 100%;
+			z-index: 1000;
+			top: 0;
+			left: 100%;
+			background-color: #fff;
+			transition: all .3s;
+			-moz-transition: all .3s; /* Firefox 4 */
+			-webkit-transition: all .3s; /* Safari 和 Chrome */
+			-o-transition: all .3s; /* Opera */
+		}
+		#conmunite .conmunite-show.show{
+			left: 0;
+			transition: all .3s;
+			-moz-transition: all .3s; /* Firefox 4 */
+			-webkit-transition: all .3s; /* Safari 和 Chrome */
+			-o-transition: all .3s; /* Opera */
+		}
+		#conmunite .show-title{
+			font-family: '微软雅黑';
+			font-size: 22px;
+			line-height: 48px;
+			padding: 0 48px;
+			color: #fff;
+			font-weight: normal;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+			background-color: #2b3849;
+			position: relative;
+		}
+		#conmunite .show-title:before{
+			content: '';
+			position: absolute;
+			display: block;
+			height: 10px;
+			width: 10px;
+			top: 50%;
+			margin-top: -6px;
+		    left: 17px;
+			border-top: 2px #fff solid; 
+			border-left: 2px #fff solid;
+			transform:rotate(-45deg);
+			-ms-transform:rotate(-45deg); /* IE 9 */
+			-moz-transform:rotate(-45deg); /* Firefox */
+			-webkit-transform:rotate(-45deg); /* Safari and Chrome */
+			-o-transform:rotate(-45deg); /* Opera */ 
+		}
+		#conmunite .conmunite-show li{
+			padding: 7px 11px;
+		}
+		#conmunite table,tr,tbody{
+			display: block;
+		}
+		#conmunite table{
+			margin: 11px;
+		}
+		#conmunite table tr td:first-child{
+			vertical-align: top;
+		    width: 30%;
+		    color: #292929;
+		}
+		#conmunite table tr td:last-child{
+			vertical-align: top;
+			width: 66%;
+			text-align: right;
+			word-break: break-all;
+			color: #118CA5;
+		}
+		#conmunite tr{
+		    margin: 21px 0;
+		}
+		#conmunite tr td{
+			display: inline-block;
+		}
+		.fa>img {
+		    width: 30px;
+		    vertical-align: middle;
+		    margin-bottom: 6px;
+		}
+	</style>
+</head>
+<body>
+	<div id="panle">
+		<div class="dsn-page-header">
+			<h4 class="center">消息</h4>
+			<a class="go-back fa"></a>
+			<a class="go-home fa"><img rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>img/05.jpg" class="exit"></a>
+		</div>
+		<div class="dsn-page-content">
+			<!-- 消息div -->
+			<div id="message">
+				<ul>
+					<!-- <li class="my-todo" clickurl="uac/todo">我的待办</li> -->
+				</ul>
+			</div>
+			<!-- 通讯录div -->
+			<div id="conmunite">
+				<ul class="person-list">
+					
+				</ul>
+				<div class="conmunite-show">
+					<p class="center show-title">部门通讯录详情</p>
+					<table>
+						<tr>
+							<td>用户ID:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>姓名:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>性别:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>职位:</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>邮件地址:</td>
+							<td></td>
+						</tr>	
+					</table>
+				</div>
+			</div>
+			<!-- 移动应用div -->
+			<div id="app">
+				<ul>
+					<!-- <li class="my-todo on">我的待办<i class="role"></i></li>
+					<li class="my-todo">我的待办<i class="role"></i></li> -->
+				</ul>
+			</div>
+			<!-- 设置div -->
+			<div id="set">
+				<ul>
+					<%=about4TailorBrowser%>
+				</ul>
+			</div>
+		</div>
+		<!-- 底部，提交，页底导航 -->
+		<div class="dsn-page-footer">
+			<ul class="tab-menu">
+				<li class="checked">
+					<i class="message"></i>
+					<p>消息</p>
+				</li>
+				<!--
+				<li>
+					<i class="conmunite"></i>
+					<p>通讯录</p>
+				</li>
+				-->
+				<li>
+					<i class="app"></i>
+					<p>移动应用</p>
+				</li>
+				<li id="st">
+					<i class="set"></i>
+					<p>设置</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<script type="text/javascript">
+		var root = '<%=ROOTURL%>',
+			tailor = '<%=TAILOR_BASE_URL%>',
+			modules = '<%=models%>';
+		var root_dm = '<%=ROOTURL_DM%>';//添加地址---cy
+		/**
+		 * 展示通讯录详情
+		 * @param  {[type]} obj [description]
+		 * @return {[type]}     [description]
+		 */
+		function showDetailCommunication(obj){
+			var el = $('.conmunite-show');
+			el.find('td').eq(1).text(obj.userid);
+			el.find('td').eq(3).text(obj.username);
+			el.find('td').eq(5).text(obj.usersex);
+			el.find('td').eq(7).text(obj.userposition);
+			el.find('td').eq(9).text(obj.useraddress);
+			el.addClass('show');
+		}
+		/**
+		 * 渲染通讯录
+		 * @return {[type]} [description]
+		 */
+		function renderCommunicationTree(data){
+			var len = data.length;
+			var ul = $('#conmunite').find('ul').eq(0); 
+			for(i=0;i<len;i++){
+				var li = $('<li>');
+				li.text(data[i].username).data(data[i]).click(function(){
+					var self = $(this);
+					showDetailCommunication(self.data());
+				});
+				li.appendTo(ul);
+			}
+			ajaxSwitch = true;
+			$('.dsn-page-content').css({
+				'overflow-y' : 'scroll'
+			});
+			hideLoadingMask();
+		}
+		/**
+		 * 加载人员树数据
+		 * @return {[type]} [description]
+		 */
+		function uploadCommunicationData(index,callback){
+			var start = index||0;
+			var urlPath = tailor + root_process + 'Bluepage/bluepage/bluePageQuery.do?startIndex='+start;
+			ajaxSwitch = false;
+			$('.dsn-page-content').css({
+				'overflow-y' : 'hidden'
+			});
+			callback&&callback();
+			$.ajax({
+				url : urlPath,
+				type : 'POST',
+				data : {
+					orgID : -1
+				},
+				dataType : 'json',
+				success : function(data){
+					console.log(data);
+					renderCommunicationTree(data.data);
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		/**
+		 * 	获取通讯录cookie
+		 * @return {[type]} [description]
+		 */
+		function getCommunicationCookie(){
+			var urlPath = tailor + root_process+'Bluepage/bluepage/bluePageInit.do';
+			$.ajax({
+				url : urlPath,
+				type : 'get',
+				dataType : 'json',
+				timeout : 30000,
+				success : function(data){
+					console.log(data);
+					uploadCommunicationData();
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		/**
+		 * 	加载通讯录
+		 * @return {[type]} [description]
+		 */
+		function uploadCommunication(){
+			getCommunicationCookie();
+		}
+		// 应用登陆第一次跳转
+		function appLoginJumpOne(url){
+			var urlPath = tailor+url;
+			$.ajax({
+				url : urlPath,
+				type : 'get',
+				dataType : 'json',
+				timeout : 30000,
+				success : function(data){
+					if(data.success){
+						hideLoadingMask();
+						uploadCommunication();
+					}else{
+						showMessageDialog(data.message);
+					}
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		// 开始应用登陆
+		function doLoginApp(params){
+			var urlPath = tailor+root+'uac/appRes!accessAppRes.action';
+			$.ajax({
+				url : urlPath,
+				type : 'post',
+				data : params,
+				dataType : 'json',
+				timeout : 30000,
+				success : function(data){
+					appLoginJumpOne(data.data);
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		// 获取应用登陆参数
+		function getApplicationLoginParms(url){
+			var urlPath = tailor+root+url;
+			$.ajax({
+				url : urlPath,
+				type : 'get',
+				timeout : 30000,
+				dataType : 'json',
+				success : function(data){
+					doLoginApp(data.data);
+					console.log(data);
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		// 应用登陆地址路由
+		function applicationUrlRrouter(){
+			var urlPath = tailor + root + 'uac/jsp/setup/resourceFavorite!toResourceFavoritePage.action';
+			$.ajax({
+				url : urlPath,
+				type : 'get',
+				timeout : 30000,
+				dataType : 'json',
+				success : function(data){
+					if(data.success){
+						getApplicationLoginParms(data.data);
+					}else{
+						showMessageDialog(data.message);
+					}
+				},
+				error : function(e){
+					throw('ajax error');
+				}
+			});
+		}
+		// 跟新数据库model
+		function upModelData(id,display){
+			var urlPath = tailor + root + 'DB/update/modules?id='+id+'&display='+display;
+			$.ajax({
+				url : urlPath,
+				type : 'GET',
+				timeout : 30000,
+				dataType : 'json',
+				success : function(data){
+					console.log(data);
+				},
+				error : function(e){
+					throw ('ajax error');
+				}
+			});
+		};
+		// 渲染消息页列表与应用设置页
+		function renderAppHtml(){
+			var data = JSON.parse(modules);
+			var model = data.modules;
+			var infoNum = model.length;
+			var message = $('#message').find('ul').eq(0);
+			var app = $('#app').find('ul').eq(0);
+			for(i=0;i<infoNum;i++){
+				console.log(model[i]);
+				var msgli = $('<li>');
+				msgli.data(model[i]);
+				msgli.text(model[i].displayName);
+				msgli.attr('clickurl',model[i].url);
+				msgli.addClass(model[i].icon);
+				msgli.appendTo(message).hide();
+				var ali = $('<li>').click(function(){
+					var icon = $(this).data('icon');
+					$(this).toggleClass('on');
+					var display;
+					if($(this).hasClass('on')){
+						$('.'+icon,$('#message ul')).show();
+						display = 1;
+					}else{
+						$('.'+icon,$('#message ul')).hide();
+						display = 0;
+					}
+					upModelData($(this).data('id'),display);
+				});
+				ali.data(model[i]);
+				ali.text(model[i].displayName);
+				ali.addClass(model[i].icon);
+				ali.appendTo(app);
+				var role = $('<i class="role">');
+				role.appendTo(ali);
+				if(model[i].isAdded){
+					ali.addClass('on');
+					msgli.show();
+				}
+			}
+		}
+		
+		//添加子系统菜单
+		function addOtherSysteMenu(title, context){
+			var hetongLI = $("<LI/>");
+			hetongLI.attr("clickurl", "othersys/todo/" + context);
+			hetongLI.attr("class", "my-todo");
+			hetongLI.html(title);
+			$("#message").find("ul").append(hetongLI);
+		}
+		
+		$(document).ready(function(){
+			// 页面初始化开始
+			var clientHeight = $(window.parent).height(),
+				clientWidth = $(window.parent).width();
+			$('#panle').css({height:clientHeight+'px',width:clientWidth+'px'});
+			$('.dsn-page-content').css({height:(clientHeight-48-60)+'px'});
+			// 页面初始化结束
+			$('#message').delegate('*[clickurl]','click',function(){
+			// $('*[clickurl]').click(function(){
+				$(this).siblings().removeClass('active');
+				$(this).addClass('active');
+				var url = tailor + root + $(this).attr('clickurl');
+				var slidein = new SlippageLoad({
+					url : url
+				});
+			});
+			// 底部菜单切换
+			$('.tab-menu li').click(function(){
+				if($(this).hasClass('checked')){
+					return false;
+				}
+				$('.tab-menu li.checked').removeClass('checked');
+				$(this).addClass('checked');
+				$('.dsn-page-content>div').hide();
+				var id = $(this).find('i').eq(0).attr('class');
+				$('#'+id).show();
+			});
+			$('.exit').click(function(){
+				var url = tailor + root_dm + "LoginOut-" + "workbench/logout.action?loginType=2";
+				var jumpurl = tailor;
+				showLogoutDialog(url,jumpurl);
+			});
+			$("#message").show();
+			// 应用设置点击触发
+			$('#app ul li').click(function(){
+				$(this).toggleClass('on');
+			});
+			// 渲染应用
+			renderAppHtml();
+			// 关闭详细通讯录页面
+			$('.show-title').click(function(){
+				$('.conmunite-show').removeClass('show');
+			});
+		});
+		(function($){
+			var Tips = function(obj){
+				this.el = $('<div class="tips">');
+				this.default = {
+					timeout : 30000,
+					color : 'rgba(0,0,0,.5)',
+					message : '加载中···'
+				};
+				this.conf = $.extend({},obj,this.default);
+				this.body = $('body');
+				this.bfel = $('<div class="tips-before">');
+				this.afel = $('<div class="tips-after">');
+				this.context = $('<p>');
+				this.render();
+			};
+			Tips.prototype = {
+				render : function(){
+					var el = this.el;
+					this.bfel.appendTo(el);
+					this.body.append(el);
+					this.context.text(this.conf.message).appendTo(el);
+					el.append();
+					this.init();
+				},
+				init : function(){
+					var conf = this.conf;
+					this.bfel.css({
+						'background-color':conf.color
+					}).animate({
+						width : '100%'
+					},conf.timeout);
+				}
+			};
+			window['Tips'] = Tips;
+		})(jQuery);
+	</script>
+</body>
+</html>

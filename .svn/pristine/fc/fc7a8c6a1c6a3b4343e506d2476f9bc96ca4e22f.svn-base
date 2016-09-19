@@ -1,0 +1,446 @@
+<!DOCTYPE HTML>
+<% include("timelog.report.js"); %>
+<html>
+	<head>
+		<title>耗时报表</title>
+		<meta content="width=device-width, initial-scale=1"  name="viewport" />
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=CONTAINER%>/resource/dist/css/zui.min.css"/>
+		<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=CONTAINER%>/resource/dist/lib/datetimepicker/datetimepicker.min.css"/>
+		<style type="text/css">
+			body {
+				font-size: 10px;
+			}
+			strong {
+				font-size: 13px;
+			}
+			.row {
+				padding-left: 10px;
+				margin-top: 10px;
+				margin-bottom: 10px;
+				padding-right: 10px;
+			}
+			input, button {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+			td {
+				word-break: break-all;
+			}
+			.highlightRow {
+				background-color: #ffe7bc;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="panel panel-info">
+				<div class="panel-heading" contenteditable="">
+					<i class="icon icon-pie-chart"></i><strong>业务耗时统计</strong>
+				</div>
+				<div class="panel">
+					<div class="row">
+						<div class="col-md-3">
+							<a href="<%=TAILOR_BASE_URL%><%=BASE_URL%>/app/time_log_detail">
+							<button class="btn btn-info" id="report" type="button">
+								<i class="icon icon-eye-close"></i>日志统计
+							</button> </a>
+						</div>
+						<div class="col-md-3">
+							<a href="<%=TAILOR_BASE_URL%><%=BASE_URL%>/app/timelog.do">
+							<button class="btn btn-info" id="timlog" type="button">
+								<i class="icon icon-eye-close"></i>老版日志
+							</button> </a>
+						</div>
+					</div>
+				</div>
+				<div class="panel-body"  contenteditable="">
+					<div class="alert alert-warning">
+						提示：图表中<span class="label label-info">蓝色</span>代表预处理平均耗时，<span class="label label-danger">红色</span>代表运行平均耗时。
+						如果设置的样本数量小于<%=avgPageSize%>，则会按照最小<%=avgPageSize%>的样本数量进行统计。
+					</div>
+					<div class="row">
+						<div class="col-md-4">
+							<canvas id="business_chart" width="200" height="200"></canvas>
+						</div>
+						<div class="col-md-8">
+							<div class="panel">
+								<div class="row">
+									<div class="col-md-5">
+										<input type="text" name="business" class="form-control " placeholder="业务名称">
+										<button class="btn btn-info btn-block" id="statistical_business" type="button">
+											<i class="icon icon-magic"></i>以业务名称统计
+										</button>
+									</div>
+
+									<div class="col-md-2">
+										<input type="text" name="pageSize" class="form-control " placeholder="样本数量">
+										<!--
+										<input type="text" name="start_time" class="form-control form-datetime" placeholder="开始时间">
+										<input type="text" name="end_time" class="form-control form-datetime" placeholder="截止时间">
+										-->
+									</div>
+
+									<div class="col-md-5">
+										<input type="text" name="doc_type" class="form-control " placeholder="公文类型">
+										<button class="btn btn-info btn-block" id="statistical_doc_type" type="button">
+											<i class="icon icon-magic"></i>以公文类型统计
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<table class="table table-hover table-bordered">
+									<thead>
+										<tr>
+											<th style="width: 150px;">业务名称</th>
+											<th style="width: 150px;">公文类型</th>
+											<th style="width: 70px;">样本数量</th>
+											<th style="width: 70px;">预处理平均耗时(ms)</th>
+											<th style="width: 70px;">运行平均耗时(ms)</th>
+											<th style="width: 70px;">合计平均耗时(ms)</th>
+										</tr>
+									</thead>
+									<tbody id="business_statistical_table">
+
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<table class="table table-striped table-hover table-bordered">
+							<thead>
+								<tr>
+									<th style="width: 80px;">采集点</th>
+									<th style="width: 100px;">请求方法 </th>
+									<th>请求地址</th>
+									<th style="width: 150px;">请求平均耗时(ms)</th>
+									<th style="width: 150px;">处理平均耗时(ms)</th>
+								</tr>
+							</thead>
+							<tbody id="process_statistical_table">
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading" contenteditable="">
+					<i class="icon icon-line-chart"></i><strong>业务耗时详情统计报表</strong>
+				</div>
+				<div class="panel-body"  contenteditable="">
+					<canvas id="process_chart"></canvas>
+				</div>
+			</div>
+		</div>
+		<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=CONTAINER%>/resource/dist/lib/jquery/jquery.js"></script>
+		<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=CONTAINER%>/resource/dist/js/zui.js"></script>
+		<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=CONTAINER%>/resource/dist/lib/chart/chart.min.js"></script>
+		<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=CONTAINER%>/resource/dist/lib/datetimepicker/datetimepicker.min.js"></script>
+		<script type="text/javascript">
+			$("input[name='start_time']").datetimepicker({
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				forceParse : 0,
+				showMeridian : 1,
+				format : 'yyyy-mm-dd hh:ii'
+			});
+			$("input[name='end_time']").datetimepicker({
+				weekStart : 1,
+				todayBtn : 1,
+				autoclose : 1,
+				todayHighlight : 1,
+				startView : 2,
+				forceParse : 0,
+				showMeridian : 1,
+				format : 'yyyy-mm-dd hh:ii'
+			});
+		</script>
+		<script type="text/javascript">
+			var business_chart;
+			//是否已经初始化过业务图表
+			var hasInitBusinessChart = false;
+			var process_chart;
+			//是否已经初始化过子流程图表
+			var hasInitProcessChart = false;
+			//业务统计结果
+			var bs_results = new Array();
+
+			function refreshBusinessStatisticalChart(result) {
+				var avg_before_time = new Object();
+				avg_before_time.value = result.avg_before_time;
+				avg_before_time.color = "#03b8cf";
+				avg_before_time.label = "预处理平均耗时";
+				var avg_run_time = new Object();
+				avg_run_time.value = result.avg_run_time;
+				avg_run_time.color = "#ea644a";
+				avg_run_time.label = "运行平均耗时";
+
+				var b_data = new Array();
+				b_data[0] = avg_before_time;
+				b_data[1] = avg_run_time;
+				// 图表配置项，可以留空来使用默认的配置
+				var options = {
+					scaleShowLabels : true, // 展示标签
+				};
+				// 创建饼图
+				business_chart = $("#business_chart").pieChart(b_data, options);
+				hasInitBusinessChart = true;
+			}
+
+			//刷新业务日志统计数据表
+			function refreshBusinessStatistical(results) {
+				bs_results = results;
+				//刷新业务日志统计数据表
+				refreshBusinessStatisticalTable(results);
+				if (results.length > 0) {
+					refreshBusinessStatisticalChart(results[0]);
+				}
+			}
+
+			function destroyStatistical() {
+				destroyBusinessStatistical();
+				destroyProcessStatistical();
+			}
+
+			function destroyProcessStatistical() {
+				if (hasInitProcessChart) {//已经初始化过图
+					process_chart.destroy();
+				}
+				$("#process_statistical_table").html("");
+			}
+
+			function destroyBusinessStatistical() {
+				destroyBusinessStatisticalChart();
+				destroyBusinessStatisticalTable();
+			}
+
+			function destroyBusinessStatisticalChart() {
+				if (hasInitBusinessChart) {//已经初始化过图
+					business_chart.destroy();
+				}
+			}
+
+			function destroyBusinessStatisticalTable() {
+				$("#business_statistical_table").html("");
+			}
+
+			//刷新业务日志统计数据表
+			function refreshProcessStatistical(list) {
+				//担心断点会纪录非数字，暂时屏蔽排序
+				//list.sort(function(a, b) {
+				//	return parseInt(a.identifier) > parseInt(b.identifier) ? 1 : -1;
+				//});
+				//刷新业务日志统计数据表
+				refreshProcessStatisticalTable(list);
+
+				var labels = new Array();
+				var avg_request_times = new Array();
+				var avg_proces_times = new Array();
+				for (var i = 0; i < list.length; i++) {
+					labels[i] = list[i].identifier;
+					avg_proces_times[i] = list[i].avg_proces_time;
+					avg_request_times[i] = list[i].avg_request_time;
+				}
+
+				var p_data = {
+					labels : labels,
+					datasets : [{
+						label : "请求平均耗时",
+						color : "#03b8cf",
+						data : avg_request_times
+					}, {
+						label : "处理平均耗时",
+						color : '#ea644a',
+						data : avg_proces_times
+					}]
+				};
+
+				var options = {
+					responsive : true
+				};
+				// 图表配置项，可以留空来使用默认的配置
+				process_chart = $('#process_chart').barChart(p_data, options);
+				hasInitProcessChart = true;
+			}
+
+			//刷新业务日志统计数据表
+			function refreshBusinessStatisticalTable(data) {
+				var statistical_table = $("#business_statistical_table");
+				for (var i = 0; i < data.length; i++) {
+					var tr = "<tr target=\"" + i + "\" class=\"business_statistical_table_item\"><td class=\"b_value\">" + data[i].business + "</td><td class=\"t_value\">" + data[i].doc_type + "</td><td>" + data[i].count + "</td><td>" + data[i].avg_before_time + "</td><td>" + data[i].avg_run_time + "</td><td>" + (data[i].avg_before_time + data[i].avg_run_time) + "</td></tr>";
+					var append = $(tr).appendTo(statistical_table);
+					//高亮第一行
+					if (0 === i) {
+						highlightRow(append);
+					}
+				}
+			}
+
+			//刷新业务日志统计数据表
+			function refreshProcessStatisticalTable(list) {
+				var statistical_table = $("#process_statistical_table");
+				for (var i = 0; i < list.length; i++) {
+					var tr = "<tr class=\"process\"><td>" + list[i].identifier + "</td><td>" + list[i].request_method + "</td><td>" + list[i].target_url + "</td><td>" + list[i].avg_request_time + "</td><td>" + list[i].avg_proces_time + "</td></tr>";
+					statistical_table.append(tr);
+				}
+			}
+		</script>
+		<script type="text/javascript">
+			var post_url = "<%=timelogger_post_url%>";
+			var pageSize = <%=avgPageSize%>;
+			var filter_type;
+			//搜索事件
+			$(document).on("click", "#statistical_business", function() {
+				$(this).attr("disabled","disabled");
+				//清空旧数据
+				destroyStatistical();
+				filter_type = 0;
+				var filter_value = $("input[name='business']").val();
+				var page = 0;
+				var avgPageSize = $("input[name='pageSize']").val();
+				if (parseInt("0" + avgPageSize) < pageSize) {
+					avgPageSize = pageSize;
+				}
+				if ("" == filter_value) {
+					return;
+				}
+
+				$.ajax({
+					type : "post",
+					data : {
+						page : page,
+						method : "statisticalBusinessLogs",
+						pageSize : avgPageSize,
+						filter_value : filter_value,
+						filter_type : filter_type
+					},
+					url : post_url,
+					dataType : "json",
+					success : function(result) {
+						refreshBusinessStatistical(result);
+						if (result.length>0) {
+							if (0 === filter_type) {
+								filter_value = result[0].business;
+							} else if (1 === filter_type) {
+								filter_value = result[0].doc_type;
+							}
+							$.ajax({
+								type : "post",
+								data : {
+									page : page,
+									method : "statisticalProcessLogs",
+									pageSize : avgPageSize,
+									filter_value : filter_value,
+									filter_type : filter_type
+								},
+								url : post_url,
+								dataType : "json",
+								success : function(result) {
+									refreshProcessStatistical(result);
+								},
+								error : function(XMLHttpRequest, textStatus, errorThrown) {
+									console.log(errorThrown);
+								}
+							});
+						}
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(errorThrown);
+					},
+					complete: function(XMLHttpRequest, textStatus){
+						$("#statistical_business").removeAttr("disabled");
+					}
+				});
+
+			});
+			//搜索事件
+			$(document).on("click", "#statistical_doc_type", function() {
+				//清空旧数据
+				destroyStatistical();
+				filter_type = 1;
+				var filter_value = $("input[name='doc_type']").val();
+				var page = 0;
+				var avgPageSize = $("input[name='pageSize']").val();
+				if (parseInt("0" + avgPageSize) < 5000) {
+					avgPageSize = pageSize;
+				}
+				if ("" == filter_value) {
+					return;
+				}
+				$.ajax({
+					type : "post",
+					data : {
+						page : page,
+						method : "statisticalBusinessLogs",
+						pageSize : avgPageSize,
+						filter_value : filter_value,
+						filter_type : filter_type
+					},
+					url : post_url,
+					dataType : "json",
+					success : function(result) {
+						refreshBusinessStatistical(result);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(errorThrown);
+					}
+				});
+
+			});
+		</script>
+		<script type="text/javascript">
+			//高亮选中行
+			function highlightRow(row) {
+				row.parent().children().each(function() {
+					$(this).removeClass("highlightRow");
+				});
+				row.addClass("highlightRow");
+			}
+
+
+			$(document).on("click", ".business_statistical_table_item", function() {
+				//高亮选中行
+				highlightRow($(this));
+				destroyBusinessStatisticalChart();
+				//刷新业务图表
+				refreshBusinessStatisticalChart(bs_results[parseInt($(this).attr("target"))]);
+				destroyProcessStatistical();
+				var filter_value = "";
+				if (0 === filter_type) {
+					filter_value = $(this).find(".b_value").text();
+				} else if (1 === filter_type) {
+					filter_value = $(this).find(".t_value").text();
+				}
+				var page = 0;
+				var avgPageSize = $("input[name='pageSize']").val();
+				if (parseInt("0" + avgPageSize) < 5000) {
+					avgPageSize = pageSize;
+				}
+				$.ajax({
+					type : "post",
+					data : {
+						page : page,
+						method : "statisticalProcessLogs",
+						pageSize : avgPageSize,
+						filter_value : filter_value,
+						filter_type : filter_type
+					},
+					url : post_url,
+					dataType : "json",
+					success : function(result) {
+						refreshProcessStatistical(result);
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(errorThrown);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>

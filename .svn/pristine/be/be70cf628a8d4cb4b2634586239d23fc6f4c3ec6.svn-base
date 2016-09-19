@@ -1,0 +1,800 @@
+@charset "utf-8";
+@import url(all.css);
+/* 文档移动版样式 */
+
+/* 提交下一处理Button */
+.submit-next-btn {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	height: inherit;
+	background-color: #0c6cff;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+}
+/* 消息框确定Button */
+.mbox-btn-ok {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	height: inherit;
+	background-color: #0c6cff;
+	text-align: center;
+	font-size: 1.2rem;
+	color: #fff;
+}
+/* 消息框取消Button */
+.mbox-btn-cancel {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	height: inherit;
+	background-color: #e8ecee;
+	text-align: center;
+	font-size: 1.2rem;
+	color: #74859c;
+}
+/* 文档操作区 */
+.toolbar-undermask {
+	z-index: 30;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: inherit;
+	color: #fff;
+	background-color: rgba(0,0,0,.4);
+}
+.toolbar-undermask .context {
+	position: relative;
+	width: inherit;
+	height: 100%;
+	overflow: hidden;
+}
+.toolbar-list {
+	z-index: 40;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	background-color: #fff;
+}
+.toolbar-item {
+	height: 3rem;
+	line-height: 3rem;
+}
+.toolbar-item-icon {
+	display: inline-block;
+	width: 3rem;
+	height: 3rem;
+	text-align: center;
+	font-size: 1.2rem;
+	color: #0c6cff;
+}
+.toolbar-item-label {
+	margin-left: .8rem;
+	color: #000;
+}
+/* 信息栏意见分组 */
+.comment-item {
+	position: relative;
+	min-height: 4rem;
+	line-height: 2rem;
+	background-color: #fff;
+}
+.comment-item > div:not(:first-child) {
+	margin: .4rem 0;
+}
+.comment-item .title {
+	height: 2rem;
+	font-weight: bold;
+	background-color: #cfd9df;
+}
+.comment-item .title .b {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: .4rem;
+	height: inherit;
+	background-color: #fc5253;
+}
+.comment-item .title p {
+	padding-left: 1.2rem;
+}
+.comment-item .emp-ndt {
+	height: 2rem;
+	padding: 0 1.2rem;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+}
+.comment-item .emp-ndt span[name=n] {
+	height: inherit;
+}
+.comment-item .emp-ndt span[name=n].cared {
+	color: #ff8e35;
+}
+.comment-item .emp-ndt span[name=dt] {
+	height: inherit;
+	margin-left: .5rem;
+	font-size: .8rem;
+	color: #a8bcbf;
+}
+.comment-item .emp-msg {
+	position: relative;
+	padding: 0 1.2rem;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.comment-item .emp-msg .chevron-up {
+	display: inline-block;
+	position: absolute;
+	top: -0.4rem;
+	left: 1.8rem;
+	width: .7rem;
+	height: .7rem;
+	background-color: #fff;
+	border-top: 1px solid #cfd9df;
+	border-left: 1px solid #cfd0df;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-moz-transform: rotate(45deg); /* Firefox */
+	-webkit-transform: rotate(45deg); /* Safari 和 Chrome */
+	-o-transform: rotate(45deg); /* Opera */
+}
+.comment-item .emp-msg .chevron-up.cared {
+	background-color: #fff1d0;
+	border-color: #ffdf91;
+}
+.comment-item .emp-msg p {
+	padding: 0 .4rem;
+	min-width: 50%;
+	border: 1px solid #cfd9df;
+	border-radius: 3px;
+}
+.comment-item .emp-msg p.cared {
+	background-color: #fff1d0;
+	border-color: #ffdf91;
+	font-size: 1.2rem;
+}
+/* 附件栏分组 */
+.attachment-item {
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+	height: 2rem;
+	line-height: 2rem;
+	padding: .6rem 0;
+	background-color: #fff;
+	border-bottom: 1px solid #cfd9df;
+}
+.attachment-item .icon {
+	width: 20%;
+	text-align: center;
+}
+.attachment-item .icon div{
+	display: inline-block;
+	width: 50%;
+	height: 1.6rem;
+	line-height: 1.6rem;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 3px;
+}
+/* office word */
+.attachment-item .icon .doc,
+.attachment-item .icon .docx {
+	border-color: #01b5da;
+	color: #01b5da;
+}
+/* office excel */
+.attachment-item .icon .xls,
+.attachment-item .icon .xlsx {
+	border-color: #78ca4a;
+	color: #78ca4a;
+}
+/* office powerpoint */
+.attachment-item .icon .ppt,
+.attachment-item .icon .pptx {
+	border-color: #ffb502;
+	color: #ffb502;
+}
+/* pdf */
+.attachment-item .icon .pdf {
+	border-color: #ff8b02;
+	color: #ff8b02;
+}
+/* all kinds of image */
+.attachment-item .icon .jpg,
+.attachment-item .icon .png {
+	border-color: #7073f4;
+	color: #7073f4;
+}
+/* all kinds of compressed file */
+.attachment-item .icon .zip,
+.attachment-item .icon .rar {
+	border-color: #cfa972;
+	color: #cfa972;
+}
+.attachment-item .title {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	color: #74859c;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.attachment-item .open-btn {
+	width: 20%;
+	text-align: center;
+	color: #a8bcbf;
+	font-size: 1.2rem;
+}
+/* 填写意见视图层 */
+.opinion-frame,
+.fullwin-frame {
+	z-index: 100;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: #fff;
+}
+.decision-options {
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+	box-align: center;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-o-box-align: center;
+	height: 5rem;
+	background-color: #e6ebee;
+}
+.decision-options .option-btn {
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+	height: 2.5rem;
+	line-height: 2.5rem;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #cfd9df;
+	color: #cfd9df;
+	background-color: #fff;
+}
+.decision-options .option-btn.selected {
+	border-color: #0c6cff;
+	color: #fff;
+	background-color: #0c6cff;
+}
+.decision-options .option-btn .icon {
+	position: relative;
+	width: 2.5rem;
+	height: inherit;
+}
+.decision-options .option-btn .txt {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	font-size: 1.2rem;
+}
+.decision-options .option-btn.selected .f-check {
+	border-color: #0c6cff;
+}
+.opinion-editfield-label,
+.select-tree-label {
+	height: 2rem;
+	line-height: 2rem;
+	padding: .4rem 0;
+	color: #cfd9df;
+}
+/* 常用意见组件 */
+.normal-options {
+	padding: 0 .6rem;
+}
+.normal-list {
+	position: relative;
+}
+.normal-list ul {
+	z-index: 50;
+	position: absolute;
+	top: 3rem;
+	width: 100%;
+	max-height: 12rem;
+	background-color: #fff;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.normal-list li {
+	border-style: solid;
+	border-color: #b4bcc7;
+}
+.normal-list li:first-child {
+	border-width: 1px;
+}
+.normal-list li:not(:first-child) {
+	border-width: 0 1px 1px 1px;
+}
+.normal-list .opinion-item {
+	height: 3rem;
+	line-height: 3rem;
+	padding: 0 .4rem;
+	color: #9ea9b8;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.normal-list .opinion-item.selected {
+	position: relative;
+	padding-right: 3.4rem;
+	padding-left: .4rem;
+	border: 1px solid #b4bcc7;
+	border-radius: 5px;
+}
+.normal-list .opinion-item .c-btn {
+	display: inline-block;
+	position: absolute;
+	right: 0;
+	width: 3rem;
+	height: inherit;
+	text-align: center;
+}
+/* 下一路径选择组件 */
+.nextpath-options {
+	padding: 0 .6rem;
+}
+.nextpath-list .path-item {
+	position: relative;
+	height: 3rem;
+	line-height: 3rem;
+	color: #9ea9b8;
+	border-bottom: 1px solid #e6ebee;
+}
+.nextpath-list .path-indicator {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: inherit;
+	line-height: inherit;
+	text-align: center;
+	font-size: 1.2rem;
+}
+textarea {
+	display: block;
+	width: 100%;
+	padding: .2rem 0;
+	text-indent: .4rem;
+	color: #9ea9b8;
+	border-color: #b4bcc7;
+	border-radius: 5px;
+	outline: none;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+}
+/* 文件处理状态 */
+td.file-process-status {
+	line-height: 3rem;
+	padding: 0 2%;
+	color: #74859c;
+}
+/* 文件编号 */
+td.file-number,
+div.file-number {
+	line-height: 2rem;
+	font-size: .8rem;
+	color: #74859c;
+}
+/* 处理单表格 */
+.bpm-main-table {
+	border-collapse: collapse;
+	width: 96%;
+	margin: 0 2%;
+}
+.bpm-main-table td {
+	border: 1px solid #cfd9df;
+	min-height: 2rem;
+	line-height: 2rem;
+	padding: 0 .6rem;
+	color: #526580;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.bpm-main-table td b,
+.bpm-main-table td em {
+	font-weight: normal;
+}
+.bpm-main-table input[type=button] {
+	font-size: 1rem;
+	padding: .1rem;
+	background-color: #0c6cff;
+	color: #fff;
+	border: 1px solid #0c6cff;
+	outline: none;
+	-webkit-appearance: none;
+}
+.bpm-main-table select{
+	border: 1px solid #b4bcc7;
+	height: 2rem;
+	line-height: 2rem;
+	font-size: .8rem;
+	color: #74859c;
+	width: 100%;
+	overflow: hidden;
+}
+.bpm-main-table table{
+	border-collapse: collapse;
+}
+.bpm-main-table table td{
+	border: 0;
+}
+.bpm-text-title {
+	font-size: 1.7rem;
+}
+/* 模态小窗口视图 */
+.modal-frame {
+	z-index: 200;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: transparent;
+}
+.modal-dialog {
+	position: relative;
+	top: 20%;
+	left: 0;
+	margin: 0 .5rem;
+	border-radius: 5px;
+	background-color: #fff;
+}
+.modal-dialog .btn-ok {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	height: inherit;
+	text-align: center;
+	background-color: #0c6cff;
+	color: #fff;
+}
+.modal-dialog .btn-cancel {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	height: inherit;
+	text-align: center;
+	background-color: #e8ecee;
+	color: #74859c;
+}
+.tree {
+	height: inherit;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+.tree .user {
+	position: relative;
+	height: 3rem;
+	line-height: 3rem;
+	border-bottom: 1px solid #e4e9ec;
+}
+.tree .dept {
+	position: relative;
+	height: 3rem;
+	line-height: 3rem;
+	background-color: #e8ecee;
+	border-bottom: 1px solid #cfd9df;
+}
+.tree .user .label,
+.tree .dept .label {
+	position: absolute;
+	top: 0;
+	left: 3rem;
+	display: inline-block;
+}
+.tree .radio-btn {
+	display: inline-block;
+	position: relative;
+	width: 3rem;
+	height: inherit;
+	text-align: center;
+	font-size: 1.6rem;
+	color: #cfd9df;
+}
+.tree .radio-btn.checked {
+	color: #0c6cff;
+}
+.tree .ctrl-btn {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 3rem;
+	height: inherit;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #bfc7d0;
+	border-left: 1px solid #dbe1e5;
+}
+/* 流程跟踪视图 */
+.track {
+	padding: 0 .6rem;
+}
+.track li {
+	display: box;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -o-box;
+	box-orient: horizontal;
+	-webkit-box-orient: horizontal;
+	-moz-box-orient: horizontal;
+	-o-box-orient: horizontal;
+}
+.track li:first-child {
+	height: 3rem;
+	line-height: 3rem;
+	font-size: 1.4rem;
+	color: #435e82;
+}
+.track li:not(:first-child) {
+	line-height: 2rem;
+	color: #a7b3c3;
+}
+.track .track-txt {
+	box-flex: 1.0;
+	-webkit-box-flex: 1.0;
+	-moz-box-flex: 1.0;
+	-o-box-flex: 1.0;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+.track .track-icon {
+	position: relative;
+	width: 3rem;
+	text-align: center;
+	color: #e4e9ec;
+}
+/* 响应消息视图层 */
+.message-layout {
+	z-index: 200;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: inherit;
+	border: 0;
+	background-color: rgba(0,0,0,.4);
+}
+.message-dialog {
+	position: relative;
+	top: 30%;
+	left: 0;
+	margin: 0 10%;
+	height: 30%;
+	border-radius: 5px;
+	background-color: #fff;
+}
+.message-dialog .message-icon {
+	position: absolute;
+	width: 6rem;
+	height: 6rem;
+	line-height: 6rem;
+	top: -3rem;
+	left: 50%;
+	margin-left: -3rem;
+	border-radius: 50%;
+	color: #fff;
+	text-align: center;
+	font-size: 3.2rem;
+}
+.message-icon.success {
+	background-color: #0c6cff;
+}
+.message-icon.false {
+	background-color: #ff3f3e;
+}
+.message-icon.warn {
+	background-color: #ff3f3e;
+}
+.message-dialog .message-txt {
+	padding-top: 3.5rem;
+	height: 3rem;
+	line-height: 3rem;
+	text-align: center;
+	font-size: 1.6rem;
+}
+.message-dialog .message-small-txt {
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	font-size: .8rem;
+}
+.message-dialog .left-btn {
+	display: inline-block;
+	position: absolute;
+	left: 15%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #0c6cff;
+}
+.message-dialog .middle-btn {
+	display: inline-block;
+	position: absolute;
+	left: 50%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	margin-left: -3rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #0c6cff;
+}
+.message-dialog .right-btn {
+	display: inline-block;
+	position: absolute;
+	right: 15%;
+	bottom: .6rem;
+	width: 6rem;
+	height: 2.6rem;
+	line-height: 2.6rem;
+	text-align: center;
+	font-size: 1.4rem;
+	color: #fff;
+	background-color: #e8ecee;
+}
+/* 填写编号对话框 */
+.wn-dialog .file-type {
+	position: relative;
+	margin: 1rem;
+	height: 3rem;
+	line-height: 3rem;
+	border-bottom: 2px solid #cfd9df;
+	font-size: 1.2rem;
+}
+.wn-dialog .file-type .file-type-field {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 60%;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	white-space: nowrap;
+	/*overflow: hidden;*/
+}
+.wn-dialog .file-type .year-field {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.wn-dialog .file-type .info-name {
+	color: #b4bcc7;
+}
+.wn-dialog .file-type .info-value {
+	color: #74859c;
+}
+.wn-dialog .write-number-info {
+	margin: 0 1rem .5rem;
+	height: 2rem;
+	line-height: 2rem;
+	color: #74859c;
+	font-size: 1.2rem;
+}
+@media screen and (max-width: 400px) {
+	.wn-dialog .write-number-info {
+		font-size: 1rem;
+	}
+}
+.wn-dialog .file-number {
+	position: relative;
+	margin: 0 1rem 1.4rem;
+	height: 3rem;
+	line-height: 3rem;
+	border: 2px solid #cfd9df;
+	border-radius: 3px;
+}
+.wn-dialog .file-number .ctrl-btn {
+	display: inline-block;
+	position: absolute;
+	top: .5rem;
+	width: 3rem;
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	color: #b4bcc7;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.wn-dialog .file-number .ctrl-btn.left-minus {
+	left: 0;
+	border-right: 1px solid #cfd9df;
+}
+.wn-dialog .file-number .ctrl-btn.right-plus {
+	right: 0;
+	border-left: 1px solid #cfd9df;
+}
+.wn-dialog .file-number input {
+	width: 100%;
+	height: inherit;
+	font-weight: bold;
+	text-align: center;
+	color: #74859c;
+	font-size: 1.4rem;
+	border-width: 0;
+	outline: 0;
+}
+.wn-dialog .dialog-btn-field {
+	position: relative;
+	height: 4rem;
+	left: 0;
+	bottom 0;
+	padding: 0 1rem;
+}
+.wn-dialog .dialog-btn-field .w-dialog-btn {
+	display: inline-block;
+	width: 45%;
+	height: 3.4rem;
+	line-height: 3.4rem;
+	border-radius: 2px;
+	font-size: 1.4rem;
+	text-align: center;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+.wn-dialog .dialog-btn-field .w-dialog-btn:not(:last-child) {
+	margin-right: 10%;
+}
+.wn-dialog .dialog-btn-field .w-dialog-btn.dialog-ok {
+	color: #fff;
+	background-color: #0c6cff;
+	border: 1px solid #0c6cff;
+}
+.wn-dialog .dialog-btn-field .w-dialog-btn.dialog-cancel {
+	color: #74859c;
+	background-color: #e8ecee;
+	border: 1px solid #cfd9df;
+}

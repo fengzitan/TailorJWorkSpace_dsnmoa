@@ -1,0 +1,66 @@
+.attachment-item .icon {
+        width: 15%;
+        text-align: center;
+        float: left;
+      }
+      .attachment-item .title{
+        color: #435977;
+        width: 70%;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .attachment-item .icon div{
+        display: inline-block;
+        width: 80%;
+        height: 2rem;
+        line-height: 2rem;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 3px;
+        margin-top: 10px;
+      }
+      /* office word */
+      .attachment-item .icon .doc,
+      .attachment-item .icon .docx {
+        border-color: #01b5da;
+        color: #01b5da;
+      }
+      /* office excel */
+      .attachment-item .icon .xls,
+      .attachment-item .icon .xlsx {
+        border-color: #78ca4a;
+        color: #78ca4a;
+      }
+      /* office powerpoint */
+      .attachment-item .icon .ppt,
+      .attachment-item .icon .pptx {
+        border-color: #ffb502;
+        color: #ffb502;
+      }
+      /* pdf */
+      .attachment-item .icon .pdf {
+        border-color: #ff8b02;
+        color: #ff8b02;
+      }
+      /* all kinds of image */
+      .attachment-item .icon .jpg,
+      .attachment-item .icon .png {
+        border-color: #7073f4;
+        color: #7073f4;
+      }
+      /* all kinds of compressed file */
+      .attachment-item .icon .zip,
+      .attachment-item .icon .rar {
+        border-color: #cfa972;
+        color: #cfa972;
+      }
+      .attachment-item .open-btn{
+        width: 15%;
+        display: inline-block;
+        text-align: center;
+      }
+      .message{
+        border-bottom: 1px #ccc solid;
+      }

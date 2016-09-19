@@ -1,0 +1,132 @@
+<%= include('attachment.view.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<meta charset="UTF-8">
+	<title>附件浏览</title>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage-load.js"></script>
+    <script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/slippage-unload.js"></script>				    
+	<link rel="stylesheet" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<script type="text/javascript" rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>js/emis.js"></script>
+	<script>
+		$(document).ready(function(){
+			var clientWidth = $(window.parent).width(),
+				clientHeight = $(window.parent).height();
+			$('#panle').css({
+				'width':(clientWidth-14)+'px',
+				'height':(clientHeight-48)+'px',
+			});
+			$('header').css({
+				'width':clientWidth+'px'
+			});
+			$('.goback').click(function(){
+				var slideout = new SlippageUnload({
+					time:500
+/*					removeparent:$('.slide-in',window.parent.parent.document),
+					showparent:$('#doc-panel',window.parent.parent.document)*/
+				});
+			});
+			$('a[url]').each(function(){
+				if($(this).attr('url').endsWith('/')){
+					$(this).removeAttr('url').css({
+						'text-decoration':'none'
+					});
+				}
+			});
+			$('a[url]').click(function(){
+				var url = '<%=TAILOR_BASE_URL%>' + $(this).attr('url');
+				var slidein = new SlippageLoad({url:url});
+			});
+			if($('#panle img').length){
+				var loading = $('<div>');
+				loading.css({
+					'position':'absolute',
+					'width':'100%',
+					'height':'60%',
+					'z-index':'10',
+					'background-color':'#fff',
+					'color':'#0ff',
+					'font-size':'30px',
+					'text-align':'center',
+					'padding-top':'40%',
+					'top':0
+				});
+				loading.text('Loading··· ···');
+				$('#panle').append(loading);
+				$('#panle img').load(function(){
+					loading.remove();
+				});
+				window.setTimeout(function(){
+				    loading.remove();
+				},2000);
+			}
+
+		});
+		
+		String.prototype.endsWith=function(str){     
+		  var reg=new RegExp(str+"$");     
+		  return reg.test(this);        
+		};
+		
+ 	</script>
+ 	<style type="text/css">
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		body{
+			background-color:#fff; 
+		}
+		header{
+			height: 48px;
+			line-height: 48px;
+			position: absolute;
+			top: 0;
+			background-color: #2B3849;
+		}
+		header h4{
+			font-family: 'Microsoft YaHei','微软雅黑';
+			font-size: 18px;
+			color: #fff;
+			text-align: center;
+			font-weight: normal;
+		}
+		header a{
+			position: absolute;
+			top: 10px;
+			left: 10px;
+		}
+		header .back{
+			width: 20px;
+		}
+		#panle{
+			position: absolute;
+			top: 48px;
+			margin: 0 7px;
+			overflow: auto;
+			background-color: #fff;
+		}
+		#panle a{
+			color: #0202D2;
+		    text-decoration: underline;
+		}
+		#panle a:active{
+			color: #ADADBF;
+		}
+		#panle img{
+			position: relative;
+		}
+ 	</style>
+</head>
+<body>
+	<header>
+		<h4>移动OA附件在线阅读</h4>
+		<a class="goback"><img rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" src="<%=LOCAL_RESOURCE_URL%>/img/03.jpg" class="back"></a>
+	</header>
+	<div id="panle">
+		<%=show_html%>
+	</div>
+</body>
+</html>

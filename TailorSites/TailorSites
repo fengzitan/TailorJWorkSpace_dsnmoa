@@ -1,0 +1,19 @@
+{
+	"RES":{
+      "description": "设计院",
+      "matches": [ 
+      	"\\/resource\\/",
+      	"192\\.168\\.2\\.*"
+      ],
+      "path": "dsnmoa"      
+	},
+	"She Ji Yuan":{
+      "description": "设计院",
+      "matches": [ 
+      	"http:\\/\\/cmdioa\\.di\\.cmcc",
+      	"http:\\/\\/dm\\.cmdioa\\.di\\.cmcc",
+      	"\\.router\\.com"
+      ],
+      "path": "dsnmoa"      
+	}
+}

@@ -1,0 +1,815 @@
+<%=include('conf.js')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+	<meta name="renderer" content="webkit"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/emis.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/base.css"/>
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/font-awesome.min.css">
+	<link rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" rel="stylesheet"  href="<%=LOCAL_RESOURCE_URL%>css/dsn/choiceperson.css">
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/jq-1.8.3.min.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/emis.mini.js"></script>
+	<script rewrited="<%=LOCAL_RESOURCE_USE_PROXY%>" type="text/javascript" src="<%=LOCAL_RESOURCE_URL%>js/slippage.mini.js"></script>
+	<title>dsn-choice</title>
+</head>
+<body>
+	<div id="panle">
+		<div class="dsn-page-header">
+			<h4 class="center">流程提交</h4>
+			<a class="go-back fa fa-arrow-left"></a>
+			<a class="go-home fa"></a>
+		</div>
+		<!-- 页面主体 -->
+		<div class="dsn-page-content">
+			<!-- 意见填写栏 -->
+			<div class="write-advice">
+				<h4>审批意见 (您可以编辑或者选择)</h4>
+				<div class="common-select"><p>常用审批意见</p><div class="common-option"></div></div>
+				<textarea class="option-area" placeholder="意见编辑区"></textarea>
+			</div>
+			<!-- 路径 -->
+			<div class="choice-path">
+				<h4>选择路径</h4>
+			</div>
+			<!-- 人员树 -->
+			<div class="choice-person">
+				<h4></h4>
+				<div class="person-subject"></div>
+				<div class="person-btns">
+					<div class="cansle">取消</div>
+					<div class="sure">确定</div>
+				</div>
+			</div>
+			<!-- 遮盖层 -->
+			<div class="cover"></div>
+		</div>
+		<!-- 底部，提交，页底导航 -->
+		<!-- <div class="dsn-page-footer">
+			<div class="submit-btn">提交</div>
+		</div> -->
+	</div>
+	<script>
+		var root = '<%=ROOTURL%>',
+			tailor = '<%=TAILOR_BASE_URL%>',
+			root_dm = '<%=ROOTURL_DM%>',
+			END_STATE_ID = 'step0',
+			START_STATE_ID = 'step10',
+			appertainState = '0' + '',
+			APPERTAIN_NOT_RESTRICTED = '1',
+			APPERTAIN_STATE_KEY = 'appertainState',
+			APPERTAIN_MUST_NOT_HAVE = '2',
+			KEY_VALUE_SEPARATOR = '=',
+			PARAM_SEPARATOR = ';',
+			showAppertain = true,
+			APPERTAIN_MUST_HAVE = '0',
+			isFreeSubmit,
+			PERSON_PICKER_TREE_DATA_CACHE_TOKEN,
+			AUTOPATH = false;
+		//xg---cy  
+		var contextRoot = window.location.href;
+		var rootNextStr = "cmdi-workflow-dm";
+		var urlarr = contextRoot.split("/");
+		for (var i=0; i < urlarr.length; i++) {
+		  	if(urlarr[i].match(/cmdi-workflow-/)){
+		  		rootNextStr = urlarr[i].replace("View-choicePerson=","");
+		  	}
+		};
+		if (contextRoot.indexOf(root) != -1) {
+			contextRoot = root;
+		}else{
+			contextRoot = '<%=ROOTURL_DM%>';
+		}
+		/*function setNextSteps(selectparams) {
+		    nextSteps = selectparams.stepId;
+		}*/
+		//*****************************************************提交逻辑开始
+	
+		function documentSubmit(){
+	        if (window.parent) {
+	            //window.parent.showLoadingMask();
+	        }
+	/*        //校验流程意见栏
+	        var checkInfo = checkAppertain();
+	        if (!checkInfo.success) {
+	            showMessageDialog(checkInfo.message);
+	            return;
+	        }*/
+	        setNextSteps();
+	        //the end of process
+	        if(isNextStepTheEndStep()){
+	            window.parent.document.forms[0].submit();
+	            return;
+	        }
+	        var tmpAssignments = setAssignments();
+	        if(!tmpAssignments){
+	            showMessageDialog('请至少选择一位候选人!');
+	            return false;
+	        }
+	        	//-----------xg  lm
+	        var ishas = isHasPerson();
+	        if(ishas){
+	        	console.log("dfsdf");
+	        	return false;
+	        }
+	        	
+	       		//-------xg   lm   end
+	        //业务特殊处理start
+	        //获取选择的人员结点信息
+	        var bizCode=window.parent.document.getElementById("bizCode").value;
+	        var currentStep=window.parent.document.getElementById("currentStep").value;
+	        var nextSteps=window.parent.document.getElementById("nextSteps").value;
+	        //院级收文（行政类）——"承办部门领导承办"提交环节  或者 院级收文（企业标准及规范类）——"技术部总经理批示"环节 
+	        //或者 院级收文（工程类）——"承办部门领导承办"环节  或者 院级收文（会议）——"承办部门领导承办"环节
+	        //或者院级收文（技术）——"承办部门领导承办"环节
+	        if(("ColleRecXz"==bizCode&&"step25"==currentStep&&nextSteps.indexOf("step30")>-1)
+	                ||("ColleRecEnterprise_editword"==bizCode&&"step21"==currentStep&&nextSteps.indexOf("step25")>-1)
+	                ||("CollerecEngineer_editword"==bizCode&&"step16"==currentStep&&nextSteps.indexOf("step30")>-1)
+	                ||("ColleRecConf_editword"==bizCode&&"step17"==currentStep&&nextSteps.indexOf("step20")>-1)
+	                ||("ColleRecTech_editword"==bizCode&&"step25"==currentStep&&nextSteps.indexOf("step30")>-1)){
+	            //进行相关特殊判断处理
+	        	var canSubmit=false;
+	            //获取选中的结点值
+		        var assignmentsValue=window.parent.document.getElementById("assignments").value;
+		        if(assignmentsValue){
+			        //遍历选中的结点值
+			        var assignmentArr=assignmentsValue.split(",");
+			        for (var i=0;i<assignmentArr.length;i++) {
+		                var assignmentStr = assignmentArr[i];
+		                //根据选中的结点获取其全路径
+		                var checkNode=$("li[id='"+assignmentStr+"']");
+		                //xg cy
+		                var checkNodeFullPath=checkNode.getdata().attr.fullPath?checkNode.getdata().attr.fullPath:checkNode.getdata().attr.fullpath;
+		               	var checkNodeFullArr=checkNodeFullPath.split("/");
+	    				//根据全路径获取其路径结点
+		                var checkPathNode=$("li[id='"+checkNodeFullArr[1]+"']");
+		                //xg  cy
+		                var stateId = checkPathNode.attr("stateid");
+		                if (!stateId) {
+		                	stateId = checkPathNode.getdata().attr.stateId;
+		                };
+		                //获取路径结点id
+	    				//"院领导审批"环节为必填
+	    				if(("ColleRecXz"==bizCode&&"step25"==currentStep&&"step30"==stateId)
+	    	    			||("ColleRecEnterprise_editword"==bizCode&&"step21"==currentStep&&"step25"==stateId)
+	    	    			||("CollerecEngineer_editword"==bizCode&&"step16"==currentStep&&"step30"==stateId)
+	    	    			||("ColleRecConf_editword"==bizCode&&"step17"==currentStep&&"step20"==stateId)
+	    	    			||("ColleRecTech_editword"==bizCode&&"step25"==currentStep&&"step30"==stateId)){
+	    					canSubmit=true;
+	    				}
+			        }
+		        }
+		        if(!canSubmit){
+			        showMessageDialog("院领导审批为必选环节,请选择该环节候选人！");
+			        return;
+		        }
+	        }
+	      	//业务特殊处理end        
+	        setFreeSubmit();
+	        setIsReject();
+	        //如果提交的已选节点包含未展开的环节节点，先加载一次，待加载之后再提交
+	        /*var nodeIds = tmpAssignments.split(",");
+	        var aspectsNotLoaded = [];
+	        for(var i in nodeIds){
+	            if(personPicker.currTree.getNodeAttr("type", nodeIds[i])=='aspect'
+	                    && !personPicker.currTree.isLoaded(nodeIds[i])){
+	                aspectsNotLoaded.push(nodeIds[i]);
+	            }
+	        }
+	        if(aspectsNotLoaded.length>0){
+	            context.aspectCountInloading = aspectsNotLoaded.length;
+	            for(var i in aspectsNotLoaded){
+	                window.personPicker.currTree.loadChildren(nodeIds[i], function(d, t, x){
+	                    window.personPicker.eventBus.trigger("loadChildren.success", null);
+	                });
+	            }
+	            return ;
+	        }*/
+	        $('form',window.parent.document).append($('<input name="PERSON_PICKER_TREE_DATA_CACHE_TOKEN" type="hidden">').val(PERSON_PICKER_TREE_DATA_CACHE_TOKEN));
+	        window.parent.document.forms[0].submit(false);
+		}
+		$.fn.getResult = function(){
+			var result = [];
+			function recursion(el){
+				if(!el.is('div')){
+					return [];
+				}
+				var result = [];
+				if(el.find('li.checked').length){
+					el.children('li.checked').each(function(){
+						result.push($(this).attr('id'));
+					});
+					el.children('li:not(".checked")').each(function(){
+						result = result.concat(recursion($(this).next()));
+					});
+				}	
+				return result;
+			}
+			$(this).find('li.root').each(function(){
+				if($(this).hasClass('radio')){
+					var checkedradio = $(this).next().find('li.user.checked');
+					checkedradio.length ? result.push(checkedradio.attr('id')) : false;
+				}else{
+					if($(this).hasClass('checked')){
+						var children = $(this).next().children('li');
+						children.length ? function(){
+							children.each(function(){
+								result.push($(this).attr('id'));  
+							});
+						}() : result.push($(this).attr('id'));
+					}else{
+						result = result.concat(recursion($(this).next()));
+					}
+				}
+			});
+			return result;
+		};
+		$.fn.getdata = function(){
+			if($(this).length==1){
+				return $(this).eq(0).attr('data') ? JSON.parse($(this).eq(0).attr('data')):{};
+			}else{
+				var result = [];
+				$(this).each(function(){
+					result.push($(this).eq(0).getdata());
+				});
+				return result;
+			}
+		};
+		function setIsReject() {
+		    var isReject = window.parent.document.getElementById("isReject");
+		    isReject.value = $('.choice-path li.checked').getdata().isReject;
+		}
+		function setFreeSubmit() {
+		    var isFreeSubmitInParent = window.parent.document.getElementById("isFreeSubmit");
+		    isFreeSubmitInParent.value = isFreeSubmit;
+		}
+		function setNextSteps() {
+		    var nextSteps = window.parent.document.getElementById("nextSteps");
+		    nextSteps.value = $('.choice-path li.checked').getdata().stepId;
+		}
+		/*function isNextStepTheEndStep(selectparams) {
+		    return selectparams.nextSteps == END_STATE_ID;
+		}*/
+		function isNextStepTheEndStep() {
+		    var nextSteps = window.parent.document.getElementById("nextSteps");
+		    return nextSteps.value == END_STATE_ID;
+		}
+		/*function setAssignments(selectparams) {
+		    return selectparams.assignments;
+		}*/
+		function setAssignments() {
+		    var assignments = window.parent.document.getElementById("assignments");
+		    var ids = $('ul.root-'+$('.choice-path li.checked').getdata().id).getResult().join(',');
+		    assignments.value = ids;
+		    return ids;
+		}
+		
+		//xg  lm   ----------判断是否有人员数
+		function isHasPerson(){
+			var ajax = new Object();
+			var needReturn = false;
+			error_func = function (){
+            	alert('检查所选节点下是否有候选人出错');
+            	return;
+        	};
+        	success_func = function (d,t,x) {
+        		var jsonPersonData = JSON.parse(d.data);
+        		
+        		console.log("d:"+jsonPersonData[0].hasPerson);
+            	for(i in jsonPersonData){
+               		//并发迁移到结束环节
+	                if(!jsonPersonData[0].hasPerson && jsonPersonData[i].realId!=END_STATE_ID){
+	                    showMessageDialog(jsonPersonData[i].name + "下没有可用的候选人，请重新选择！");
+	                    needReturn = true;
+	                    break;
+	                }
+            	}
+	            if(needReturn){
+	                //window.personPicker.idle();
+	                console.log("if");
+	                return false;
+	            }else{
+	            	console.log("else");
+	               window.parent.document.forms[0].submit(true);
+	            }
+        	};
+        	
+			ajax.url = "http://127.0.0.1:1306/tailor/http://cmdioa.di.cmcc:9080/TailorApi-ishasperson-cmdi-workflow-pm/processconsole/checkHasPerson.action";
+	        ajax.type = 'POST';
+	        ajax.dataType = 'json';
+	        ajax.async = false;
+	        ajax.data = {
+		        checkedIds:$('ul.root-'+$('.choice-path li.checked').getdata().id).children('li.root').attr("id"),
+	            PERSON_PICKER_TREE_DATA_CACHE_TOKEN:PERSON_PICKER_TREE_DATA_CACHE_TOKEN
+	        };
+	        ajax.success = success_func;
+	        ajax.error = error_func;
+	        console.log("dfdfdfd"+$('ul.root-'+$('.choice-path li.checked').getdata().id).children('li.root').attr("id"));
+		    $.ajax(ajax);
+		    return needReturn;
+		}
+		//-------  xg lm  判断是否有人员数 end
+		
+		function stringEmpty(input) {
+		    if (!input) return true;
+		    for (var i = 0;i < input.length;i++) {
+		        if (' \t\n\r'.indexOf(input.charAt(i)) == -1) return false;
+		    }
+		    return true;
+		}
+		/*function checkAppertain(selectparams) {
+		    var rtn = {
+		        success: true,
+		        message: ''
+		    }
+		    if (showAppertain) {
+		        var appertain = selectparams.appertain;
+		        var appertainCode = selectparams.appertainCode;
+		        //当前环节为起草或者退回起草恩，流程意见不能输入
+		        if (appertainState == APPERTAIN_MUST_HAVE) {
+		            if (stringEmpty($(".option-area").val())) {
+		                rtn.message = '请填写流程意见!';
+		                $(".option-area").focus();
+		                rtn.success = false;
+		            }
+		            appertain = $(".option-area").val();
+		            appertainCode = $(".common-select").attr('value');
+		        } else if (appertainState == APPERTAIN_NOT_RESTRICTED) {
+		            appertain = $(".option-area").val();
+		            appertainCode = $(".common-select").attr('value');
+		        } else if (appertainState == APPERTAIN_MUST_NOT_HAVE) {
+		            appertain = '';
+		            appertainCode = '';
+		        }
+		    }
+		    return rtn;
+		}*/
+		function checkAppertain() {
+		    var rtn = {
+		        success: true,
+		        message: ''
+		    }
+		    if (showAppertain) {
+		        var appertain = window.parent.document.getElementById("appertain");
+		        var appertainCode = window.parent.document.getElementById("appertainCode");
+		        //当前环节为起草或者退回起草恩，流程意见不能输入
+		        if (appertainState == APPERTAIN_MUST_HAVE) {
+		            if (stringEmpty($(".option-area").val())) {
+		                rtn.message = '请填写流程意见!';
+		                $(".option-area").focus();
+		                rtn.success = false;
+		            }
+		            appertain.value = $(".option-area").val();
+		            appertainCode.value = $(".common-select").find("li.checked").attr('value');
+		        } else if (appertainState == APPERTAIN_NOT_RESTRICTED) {
+		            appertain.value = $(".option-area").val();
+		            appertainCode.value = $(".common-select").attr('value');
+		            console.log("elseif");
+		        } else if (appertainState == APPERTAIN_MUST_NOT_HAVE) {
+		            appertain.value = '';
+		            appertainCode.value = '';
+		            console.log("elseif2");
+		        }
+		    }
+		   
+		    return rtn;
+		}
+		//*****************************************************提交逻辑结束
+		function isEmpty(e) {
+			if (typeof e=='undefined') {
+				return true;
+			}
+			if (e == null) return true;
+			if (typeof e  == 'string') return e == '';
+			if (e.length != null) return e.length == 0;
+			return false;
+		}
+		function parametersMap2String(params, paramSeparator, keyValueSeparator) {
+			if (paramSeparator == null) paramSeparator =  PARAM_SEPARATOR;
+			if (keyValueSeparator == null) keyValueSeparator = KEY_VALUE_SEPARATOR;
+			var result = '';
+			for (var key in params) {
+				result += key + keyValueSeparator + params[key] + paramSeparator;
+			}
+			return result;
+		}
+		function string2ParametersMap(params, paramSeparator, keyValueSeparator) {
+			if (paramSeparator == null) paramSeparator =  PARAM_SEPARATOR;
+			if (keyValueSeparator == null) keyValueSeparator = KEY_VALUE_SEPARATOR;
+			var result = {};
+			if (!isEmpty(params)) {
+				var pairs = params.split(paramSeparator);
+				for (var i = 0;i < pairs.length;i++) {
+					var pair = pairs[i];
+					if (isEmpty(pair)) continue;
+					items = pair.split(keyValueSeparator);
+					if (items.length != 2) continue;
+					result[items[0]] = items[1];
+				}
+			}
+			return result;
+		}
+		// 是否禁用意见填写栏
+		function controlAppertainByappertainState(selectparams) {
+		    var currentStepValue = selectparams.currentStep;
+		    var nextSteps = selectparams.nextSteps;
+		    //起草人可以填写流程意见
+		    if (typeof currentStepValue=='undefined' || currentStepValue==null || currentStepValue=='' || currentStepValue=='null' || currentStepValue==START_STATE_ID) {
+		        //修改起草人提交流程时,流程意见不进行必输校验
+		        appertainState = APPERTAIN_NOT_RESTRICTED;
+		    }
+		    //the end of process
+		    if(nextSteps == END_STATE_ID){
+		        appertainState = APPERTAIN_NOT_RESTRICTED;
+		    }
+
+		    var bizParameters = selectparams.stateBizParameters;
+		    var paramsMap = string2ParametersMap(bizParameters);
+		    if (typeof paramsMap!='undefined' && paramsMap!=null && paramsMap!='') {
+		        var appertainStateFromBizParam = paramsMap[APPERTAIN_STATE_KEY];
+		        if (typeof appertainStateFromBizParam!='undefined' && appertainStateFromBizParam!=null && appertainStateFromBizParam!='') {
+		            appertainState = appertainStateFromBizParam;
+		        }
+		    }
+		    if (appertainState == APPERTAIN_MUST_NOT_HAVE) {
+		        var appertainList = $('.common-select');
+		        var appertainArea = $('.option-area');
+		        appertainList.unbind().attr("disabled", true);
+		        appertainArea.attr("disabled", true);
+		        AUTOPATH = true;
+		    }
+		}
+		// 渲染人员树节点
+		function renderTree(data,selectparams,el){
+			var infoNum = data.length;
+			if(infoNum>1){
+				el.parents('ul').addClass('disable-check');
+			}
+			var ul = el || $('<ul>').addClass('root-'+data.id);
+			for(i=0;i<infoNum;i++){
+				var li = $('<li>').appendTo(ul);
+				if(!el){
+					li.addClass('root');
+				}
+				li.text(data[i].data.title).attr('id',data[i].attr.id).attr('data',JSON.stringify(data[i])).click(function(){
+					var self = $(this);
+					if(self.hasClass('loading')){
+						return false;
+					}
+					if(self.hasClass('user')){
+						return self.parent().hasClass('disabled') ? self.unbind() : self.children('span').click();
+					}
+					if(self.hasClass('loaded')){
+						return self.next().slideToggle(200);
+					}
+					self.addClass('loading');
+					loadChoicePersonTree(self,selectparams,function(){
+						self.removeClass('loading').addClass('loaded');
+						setTimeout(function(){
+							self.next().slideToggle(200);
+						},50);
+					});
+				});
+				if(data[i].attr.type=='user'){
+					li.addClass('user');
+				}
+				if(data[i].attr.radio){
+					li.addClass('radio');
+				}
+				var checkel = $('<span class="check-btn">');
+				checkel.appendTo(li).click(function(e){
+					e.stopPropagation();
+					var parentNode = $(this).parent();
+					if(parentNode.hasClass('radio')){
+						if(!parentNode.hasClass('user')){
+							return showMessageDialog('单选环节，请选择具体人员！');
+						}else{
+							parentNode.toggleClass('checked');
+							if(parentNode.hasClass('checked')){
+								parentNode.parent().is('div') ? parentNode.parent().find('li.checked').removeClass('checked') : false;
+								for(var ancestor = parentNode.parent().prev();ancestor.next().is('div');ancestor = ancestor.parent().prev()){
+									ancestor.addClass('checked');
+									ancestor.next().find('li.checked.user').removeClass('checked');
+								}
+								parentNode.addClass('checked');
+							}else{
+								for(var ancestor = parentNode.parent().prev();ancestor.next().is('div');ancestor = ancestor.parent().prev()){
+									ancestor.removeClass('checked');
+								}
+							}
+						}
+					}else{
+						//xg---lm  模拟点击事件
+						if(!parentNode.hasClass('loaded') && parentNode.hasClass('root')){
+							parentNode.click();
+						}
+						//xg--end
+						parentNode.toggleClass('checked');
+						if(parentNode.hasClass('checked')){
+							parentNode.next().find('li').addClass('checked');
+							for(var ancestor = parentNode.parent().prev();ancestor.next().is('div');ancestor = ancestor.parent().prev()){
+								var unchekNum = ancestor.next().find('li:not(".checked")').length;
+								if(!unchekNum){
+									ancestor.addClass('checked');
+								}
+								
+							}
+						}else{
+							parentNode.next().find('li').removeClass('checked');
+							for(var ancestor = parentNode.parent().prev();ancestor.next().is('div');ancestor = ancestor.parent().prev()){
+								ancestor.removeClass('checked');
+							}
+						}
+					}
+				});
+				/*
+				var child = $('<div>').hide();
+				if (li.hasClass('radio')) {
+					if (!li.siblings().is('li')) {
+						li.addClass('checked');
+						child.addClass('checked');
+					};
+					child.addClass('radio');
+				};*/
+				var child = $('<div>').hide();
+				li.hasClass('radio') ? child.addClass('radio') : false;
+				if(li.parent().hasClass('radio')){
+					li.addClass('radio');
+					child.addClass('radio');
+				}
+				//xg
+				/*
+				li.hasClass('radio') ? child.addClass('radio') : false;
+				if(li.parent().hasClass('radio')){
+					li.addClass('radio');
+					child.addClass('radio');
+					if (!li.siblings().is('li')) {
+						li.addClass('checked');
+						child.addClass('checked');
+					};
+					child.addClass('radio');
+				}*/
+				li.hasClass('user') ? false : li.after(child);
+				if(li.parent().hasClass('auto-expand')){
+					if(!li.hasClass('user')){
+						child.addClass('auto-expand');
+						li.click();
+					}else{
+					    if(infoNum===1&&!li.parents('ul').hasClass('disable-check')){
+					    	li.click();
+					    }	
+					}
+				}
+				if(li.parent().hasClass('disabled')){
+					child.addClass('disabled');
+					li.children('span').click().unbind().parent().addClass('disabled');
+				}
+				var expandOption = data[i].attr.expandOption;
+				if(expandOption==1 || expandOption==0){
+					li.click().next().addClass('auto-expand');
+				}
+				if(li.parent().is('div')&&li.parent().prev().hasClass('checked')){
+					li.addClass('checked');
+				}
+			}
+			
+			return el ? true : function(){
+				ul.appendTo($('.person-subject'));
+				if(data.length==1){
+		            if(data[0].attr.stateId == END_STATE_ID){
+		                li.children('span').click();
+		            }else {
+		            	for(i=0;i<infoNum;i++){
+		            		var bizCode = selectparams.bizCode;
+		            		var stepid = data[i].attr.stateId;
+            				if (stepid == 'step187'&bizCode=="ColleRecTech_editword"||stepid == 'step187'&bizCode=="ColleRecXz"||stepid == 'step186'&bizCode=="CollerecEngineer_editword"||stepid == 'step188'&bizCode=="ColleRecConf_editword"||stepid == 'step150'&bizCode=="SendFileConf_editword"){
+            					var li0 = ul.children('li').eq(0);
+            					li0.next().addClass('disabled');
+            					li0.children('span').click().unbind().parent().addClass('disabled');
+            				}
+		            	}
+		            }
+				}else{
+					for(i=0;i<infoNum;i++){
+						var bizCode = selectparams.bizCode;
+						var stepid = data[i].attr.stateId;
+						if (stepid == 'step187'&bizCode=="ColleRecTech_editword"||stepid == 'step187'&bizCode=="ColleRecXz"||stepid == 'step186'&bizCode=="CollerecEngineer_editword"||stepid == 'step188'&bizCode=="ColleRecConf_editword"||stepid == 'step150'&bizCode=="SendFileConf_editword") {
+				            var li0 = ul.children('li').eq(0);
+				            li0.next().addClass('disabled');
+				            li0.children('span').click().unbind().parent().addClass('disabled');
+						}
+					}
+				}
+			}();
+		}
+		// 加载人员树
+		function loadChoicePersonTree(self,selectparams,callback){
+			var data = JSON.parse(self.attr('data'));
+			var el = data.attr&&self.next()||null;
+			var id = data.id||0;
+			data.attr ? false : $('.choice-person h4').eq(0).text(self.text());
+			type = data.attr&&data.attr.type||'';
+			switch(type){
+				case 'aspect':
+					params = {
+					    id : data.attr ? data.attr.id : 0,
+					    random : Math.random(),
+					    currNodeType : "aspect",
+					    stateId : data.attr.stateId,
+					    stateName : data.attr.stateName,
+					    currNodeFullPath : data.attr.fullPath,
+					    PERSON_PICKER_TREE_DATA_CACHE_TOKEN : selectparams.PERSON_PICKER_TREE_DATA_CACHE_TOKEN,
+					    nextSteps : data.attr.nextSteps,
+					    selectedStateId : selectparams.stepId,
+					    selectedStateName : selectparams.name,
+					    isReturn : isReturn.isReturn?isReturn.isReturn:selectparams.isReturn,
+					    workItemId : selectparams.workItemId,
+					    nextStateNames : selectparams.nextStateNames,
+					    bizCode : selectparams.bizCode,
+					    processId : selectparams.processId,
+					    userId: selectparams.userId,
+					    orgId : selectparams.orgId,
+					    positionId : selectparams.positionId,
+					    bizParameters : selectparams.bizParameters,
+					    delegationType : selectparams.delegationType,
+					    isFreeSubmit : selectparams.isFreeSubmit,
+					    loadLocalData: false
+					}
+					break;
+				case 'org':
+					params = {
+					    id : data.attr ? data.attr.id : 0,
+					    random : Math.random(),
+					    currNodeType : "org",
+					    PERSON_PICKER_TREE_DATA_CACHE_TOKEN : selectparams.PERSON_PICKER_TREE_DATA_CACHE_TOKEN
+					}
+					break;
+				default:
+					var params = {
+						random : Math.random(),
+			            currNodeType : "",
+			            PERSON_PICKER_TREE_DATA_CACHE_TOKEN : selectparams.PERSON_PICKER_TREE_DATA_CACHE_TOKEN,
+			            selectedStateId : data.stepId,
+			            selectedStateName : data.name,
+			            isReturn : data.isReturn,
+			            workItemId : selectparams.workItemId,
+			            nextStateNames : data.nextStateNames,
+			            bizCode : selectparams.bizCode,
+			            processId : selectparams.processId,
+			            userId: selectparams.userId,
+			            orgId : selectparams.orgId,
+			            positionId : selectparams.positionId,
+			            bizParameters : selectparams.bizParameters,
+			            delegationType : selectparams.delegationType,
+			            isFreeSubmit : selectparams.isFreeSubmit,
+			            loadLocalData: false
+					}	
+			}
+			//xg---cy--urlPath
+			var urlPath = tailor+contextRoot+'Tailor-Api=Tree-'+rootNextStr+'/processconsole/candidateTree.action';
+			window.isReturn = {
+				isReturn:data.isReturn
+			};
+			$.ajax({
+				url : urlPath,
+				timeout : 120000,
+				type : 'post',
+				data : params,
+				dataType : 'json',
+				success : function(data){
+					if(data.success){
+						data.data.id = id;
+						callback&&callback();
+						renderTree(data.data,selectparams,el);
+					}else{
+						showMessageDialog(data.message);
+					}
+				},
+				error : function(e){
+					throw('ajax异常');
+				}
+			});
+		}
+		// 创建常用意见html片段
+		function buildCommonHtml(data){
+			var infoNum = data.length;
+			var ul = $('<ul>');
+			for(i=0;i<infoNum;i++){
+				var li = $('<li>');
+				li.text(data[i].text).attr('value',data[i].value).click(function(){
+					if($(this).hasClass('checked')){
+						return false;
+					}
+					$('.common-option ul li.checked').removeClass('checked');
+					$(this).addClass('checked');
+					$('.common-select p').text($(this).text());
+					$('.write-advice textarea').val($(this).text());
+				});
+				ul.append(li);
+			}
+			ul.appendTo($('.common-option').hide());
+		}
+		// 创建路径html片段
+		function buildPathHtml(pathScript,data,checkAppertain){
+			var paths = [];
+			eval(pathScript);
+			var infoNum = paths.length;
+			var ul = $('<ul>');
+			for(i=0;i<infoNum;i++){
+				var li = $('<li>');
+				li.text(paths[i].name).attr('data',JSON.stringify(paths[i])).appendTo(ul).click(function(){
+					var checkinfo = checkAppertain();
+					if(!checkinfo.success){
+						showMessageDialog(checkinfo.message);
+						return false;
+					}
+					$('li.checked',$(this).parent()).removeClass('checked');
+					$(this).addClass('checked');
+					$('.choice-person').show();
+					$('.cover').show();
+					if($('ul.root-'+paths[$(this).index()].id).length){
+						$('.choice-person h4').eq(0).text($(this).text());
+						return $('ul.root-'+paths[$(this).index()].id).show();
+					}
+					loadChoicePersonTree($(this),data);
+				});
+				/*if(i==0&&checkAppertain().success){
+					li.click();
+				}*/
+			}
+			if(infoNum==1&&checkAppertain().success&&AUTOPATH){
+				li.click();
+			}
+			ul.appendTo($('.choice-path'));
+		}
+		// 获取response数据
+		function getResponseJson(){
+		//xg---cy修改访问地址:这个有些地址不包含'cmdi-workflow-dm'
+			var start = location.href.indexOf(rootNextStr);
+			var urlPath = tailor + contextRoot + 'TailorApi=CP-' + location.href.substring(start,location.href.length);
+			showLoadingMask();
+			$.ajax({
+				url : urlPath,
+				timeout : 30000,
+				type : 'get',
+				dataType : 'json',
+				success : function(data){
+					console.log("99999999999999999999999");
+					console.log(data);
+					hideLoadingMask();
+					if(data.success){
+						controlAppertainByappertainState(data.data.selectparams);
+						buildPathHtml(data.data.path,data.data.selectparams,checkAppertain);
+						buildCommonHtml(data.data.common);
+						isFreeSubmit = data.data.selectparams.isFreeSubmit;
+						PERSON_PICKER_TREE_DATA_CACHE_TOKEN = data.data.selectparams.PERSON_PICKER_TREE_DATA_CACHE_TOKEN;
+					}else{
+						showMessageDialog(data.message);
+					}
+				},
+				error : function(e){
+					hideLoadingMask();
+					throw(e);
+				}
+			});
+		}
+
+		$(document).ready(function(){
+			// 页面初始化开始
+			var clientHeight = $(window.parent).height(),
+				clientWidth = $(window.parent).width();
+			$('#panle').css({height:clientHeight+'px',width:clientWidth+'px'});
+			$('.dsn-page-content').css({height:(clientHeight-48)+'px'});
+			// 页面初始化结束
+			// 返回按钮点击事件触发
+			$('.go-back').click(function(){
+				var slideout = new SlippageUnload();
+			});
+			// 获取responseJson数据
+			getResponseJson();
+			// 常用意见点击事件触发
+			$('.common-select').click(function(){
+				$('.common-option').slideToggle(200);
+			});
+			$('.person-btns .cansle').click(function(){
+				$('.cover').hide();
+				$('.choice-person').hide();
+				$('.person-subject ul').hide();
+				$('.person-subject ul').find('li.checked:not(".disabled")').removeClass('checked');
+			});
+			$('.person-btns .sure').click(function(){
+				/*$('.cover').hide();
+				$('.choice-person').hide();
+				$('.person-subject ul').hide();*/
+				documentSubmit();
+			});
+			// 提交按钮点击事件触发
+			/*$('.submit-btn').click(function(){
+				documentSubmit();
+			});*/
+		});
+	</script>
+</body>
+</html>

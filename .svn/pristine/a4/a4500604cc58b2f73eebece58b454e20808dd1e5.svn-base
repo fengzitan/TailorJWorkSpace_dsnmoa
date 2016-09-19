@@ -1,0 +1,54 @@
+.flow-item {
+	position: relative;
+	display: block;
+	padding: 7px 11px;
+	padding-left: 51px;
+}
+.flow-item--title {
+	color: #435e82;
+	font-size: 22px;
+}
+.flow-item--unit {
+	color: #a7b3c3;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+.flow-item:before {
+	content: '';
+	position: absolute;
+	width: 2px;
+	height: 100%;
+	background-color: #e4e9ec;
+	top: 0;
+	left: 25px;
+}
+.flow-item--title:after {
+	content: '';
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background-color: #fff;
+	border-radius: 15px;
+	box-shadow: 0 0 0 2px #e4e9ec;
+	left: 16px;
+	top: 50%;
+	margin-top: -10px;
+}
+.flow-item--unit:after {
+	content: '';
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	border-radius: 4px;
+	background-color: #e4e9ec;
+	left: 23px;
+	top: 50%;
+	margin-top: -3px;
+}
+.flow-state {
+	position: absolute;
+	font-size: smaller;
+	color: #a7b3c3;
+	right: 10px;
+	bottom: 7px;
+}
