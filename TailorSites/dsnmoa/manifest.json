@@ -62,7 +62,8 @@
 				"\\/cmdi-workflow-pm",
 				"\\/cmdi-workflow-im",
 				"\\/cmdi-workflow-hr",
-				"\\/cmdi-workflow-lam"
+				"\\/cmdi-workflow-lam",
+				"\\/cmdi-workflow-zjm"
 			 ],
 			"delayed": true,
 			"filterable": true,

@@ -18,7 +18,7 @@ function handleDetail(data){
 		var bizid = data.postdata.bizId;
 		getDetailContext(urls,bizid,bizcode);
 		detailHtml = $(".content-detail").html();
-	}else if(bizcode == "signReportManager_editword"){//需要组装页面，样式2
+	}else if(bizcode == "signReportManager_editword"  || bizcode == "zhongjingqianbao_editword"){//需要组装页面，样式2   //xg lm
 		//signReportManager_editword院本部签报;
 		var html = createDetailcss2(data);
 		$(".content-detail").html(html);
@@ -131,7 +131,10 @@ function createDetail(html){
 				//$("table:eq(0) tr:first td:eq(1)").css("display","none");//---xg
 				//$("table:eq(0) tr:first td:eq(1)").attr("width","10px");
 				//$("table:eq(0) tr:first td:eq(1)").css("width","10pt");
-			};
+				//对标题显示的修改
+				$("table:eq(0) tr:first td:eq(1) p").css('margin-right','0px');
+			};//对标题显示的修改
+			$("table:eq(0) tr:eq(1) td:eq(0)").css('padding','0.2cm 5.4pt 0cm 5.4pt');
 		}else{
 			console.log("空");
 		}

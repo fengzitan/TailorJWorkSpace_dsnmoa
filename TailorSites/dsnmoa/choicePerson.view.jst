@@ -445,7 +445,9 @@
 		function renderTree(data,selectparams,el){
 			var infoNum = data.length;
 			if(infoNum>1){
-				el.parents('ul').addClass('disable-check');
+				if (el) {
+					el.parents('ul').addClass('disable-check');
+				};
 			}
 			var ul = el || $('<ul>').addClass('root-'+data.id);
 			for(i=0;i<infoNum;i++){

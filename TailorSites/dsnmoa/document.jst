@@ -18,17 +18,16 @@
 		.unit-title{
 			display: inline-block;
 			width: 35%;
-			vertical-align: middle;
+			vertical-align: top;
 		}
 		.unit-text{
 			display: inline-block;
 			width: 65%;
-			vertical-align: middle;
+			vertical-align: top;
 			word-break: break-all;
 		}
 		.content-unit{
 			padding: 7px 11px;
-			border-bottom: 1px solid #ddd;
 		}
 		.content-comment{
 			padding: 7px 11px;
@@ -340,13 +339,11 @@
 			border: none;
 			outline: none;
 			text-align: right;
-			background-color: #fff;
 		}
-		tr{
+		div.unit-text tr{
 			display: inline-block;
 			margin-top: 10px;
 			width: 100%;
-			border-bottom: 1px solid #ddd;
 		}
 		td.commentName{
 			display: inline-block;
@@ -366,6 +363,10 @@
 		}
 		.thead .unit-title{
 			width: 100%;
+		}
+		/* 正文样式微调 */
+		p.MsoNormal{
+			text-align: center !important;
 		}
 	</style>
 </head>
@@ -519,16 +520,16 @@
 					async:false,
 					success:function(data){
 						if(jQuery.isEmptyObject(titles)){		// xg lm 
-								for (var i=0; i < titles.length; i++) {
-									var unit = $('<div class="content-unit">');
-									var name = titles[i].name;
-									var values = getMatchValue(data.data.data,name);
-									if(values){
-										unit.append($('<div class="unit-title">').html(titles[i].title),$('<div class="unit-text">').html(values)).appendTo(parentel);
-									}else{
-										unit.append($('<div class="unit-title" style="width:98%">').html(titles[i].title)).appendTo(parentel);
-									}
-								};
+							for (var i=0; i < titles.length; i++) {
+								var unit = $('<div class="content-unit">');
+								var name = titles[i].name;
+								var values = getMatchValue(data.data.data,name);
+								if(values){
+									unit.append($('<div class="unit-title">').html(titles[i].title),$('<div class="unit-text">').html(values)).appendTo(parentel);
+								}else{
+									unit.append($('<div class="unit-title" style="width:98%">').html(titles[i].title)).appendTo(parentel);
+								}
+							};
 						}				
 					},
 					error:function(){
@@ -539,13 +540,17 @@
 			for(i=0;i<infoNum;i++){
 				var unit = $('<div class="content-unit">');
 				//去除温馨提示这一行---cy
-				if (data[i].title.match(/温馨提示/) || data[i].title.match(/注意：/)) {
-					data[i].title = "";data[i].text = "";
+				if (data[i].title) {
+					if (data[i].title.match(/温馨提示/) || data[i].title.match(/注意：/)) {
+						data[i].title = "";data[i].text = "";
+					}
 				};
-				if(data[i].text){
+				if(data[i].text && data[i].title){
 					unit.append($('<div class="unit-title">').html(data[i].title),$('<div class="unit-text">').html(data[i].text)).appendTo(parentel);	
 				}else{
-					if (data[i].title!="") unit.append($('<div class="unit-title" style="width:98%;">').html(data[i].title)).appendTo(parentel);
+					if (data[i].title && data[i].title!="") {
+						unit.append($('<div class="unit-title" style="width:98%;">').html(data[i].title)).appendTo(parentel);
+					}
 				}
 			}
 			//xg --cy--start
@@ -1426,26 +1431,26 @@
 	  	if('true' == cancelSubmitValidate){
 	  		return true;
 	  	}else{
-  			var vaRnumberGenerate = getStateBizParameter('generateCode');
-  			var generateCodeFlg = true;
-  			if('true' == vaRnumberGenerate){
-  				if ($('.fileCode')) {
-  					if($('.fileCode').length == 0){
-  						if('' == $('#'+commonFileCodeId).val()){
-  							showMessageDialog('编号不能为空!');
-  							generateCodeFlg = false;
-  						}
-  					}else{
-  						$('.fileCode').each(function(){
-  							if('' == $(this).val()){
-  								showMessageDialog('编号不能为空!');
-  								generateCodeFlg = false;
-  							}
-  						});
-  					}
-  				};
-  			}
-  			return generateCodeFlg;
+	  		var vaRnumberGenerate = getStateBizParameter('generateCode');
+	  		var generateCodeFlg = true;
+	  		if('true' == vaRnumberGenerate){
+	  			if ($('.fileCode')) {
+	  				if($('.fileCode').length == 0){
+	  					if('' == $('#'+commonFileCodeId).val()){
+	  						showMessageDialog('编号不能为空!');
+	  						generateCodeFlg = false;
+	  					}
+	  				}else{
+	  					$('.fileCode').each(function(){
+	  						if('' == $(this).val()){
+	  							showMessageDialog('编号不能为空!');
+	  							generateCodeFlg = false;
+	  						}
+	  					});
+	  				}
+	  			};
+	  		}
+	  		return generateCodeFlg;
 	  	}
 	  }
 		//提交
@@ -1586,7 +1591,7 @@
 		});
 		$(document).on("click","#serachspan",function(){
 			console.log("jojn");
-				var ser_conten = "";
+			var ser_conten = "";
 					//输入的关键字
 					var ser_str = $("#searchText").val();
 					console.log(ser_str);

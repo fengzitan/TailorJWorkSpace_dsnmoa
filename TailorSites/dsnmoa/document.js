@@ -58,25 +58,19 @@ try {
     };
     var maincontentdom = dom.evaluate(".//DIV[@id='mainContent']", dom.body, "", 1);
     var commentdom = dom.evaluate(".//TABLE[@class='tr3_bg_table']", maincontentdom, "", 0);
+    /*
     var commentdom2 = dom.evaluate(".//TABLE[@id='purchaseSupervision']",maincontentdom,"",1); //xg lm 针对行政类有两个tr3_bg_table样式的情况
     if (bizcode.indexOf("purchase") == -1 && bizcode.indexOf("Purchase") == -1) {   //xg lm
-        var slice,arr=[];
-       /* for(var o = 0,p=commentdom.length;o<p;o++){
-            slice = createCommentJson(commentdom[o]);               
-            arr = arr.concat(slice); //数组合并 ---yy
-            println("%======"+JSON.stringify(arr));
-        }*/
-      
+        var arr=[];
        //xg lm
        println("commentdom.length="+commentdom.length);
        if(commentdom.length >1){  //行政类特殊
             println("jin ru createCommentJson3");
-            slice = createCommentJson3(commentdom[1]);              
+            var slice = createCommentJson3(commentdom[1]);              
             arr = arr.concat(slice); //数组合并 ---yy
        }else{
             println("jin ru createCommentJson");
-            slice = createCommentJson(commentdom[0]);               
-            arr = arr.concat(slice); //数组合并 ---yy
+            arr = createCommentJson(commentdom[0]);
        }
       //xg --------------------end
         println("%======"+JSON.stringify(arr));
@@ -85,14 +79,14 @@ try {
             println("jin ru createCommentJson2");
             response.data.comment = createCommengJson2(commentdom[0]);
             println("%*****"+JSON.stringify(response.data.comment));
-    };
-    /*var arr=[];
+    };*/
+    var arr=[];
     for(var o = 0,p=commentdom.length;o<p;o++){
-        //println(commentdom[o].innerHTML);
+        println(commentdom[o].innerHTML);
         var slice = createCommentJson(commentdom[o]);
         arr = arr.concat(slice); //数组合并 ---yy
     }
-    response.data.comment = arr;*/
+    response.data.comment = arr;
 
     //  xg  --cy
     response.data.processtitle = dom.evaluate(".//TR[@class='tr1_bg']", maincontentdom, "", 1).innerText.trim();
@@ -206,13 +200,21 @@ function createCommentJson(el) {
                 continue;//---yy
             }
         }*/
+        if(TD[0]){
+            if(dom.evaluate("./UL/A",TD[0],"",1)){
+                continue;
+            }
+            if(TD[0].getAttribute("colspan") && dom.evaluate("./SPAN[@style]",TD[0],"",1)){
+                continue;
+            }
+        }
         if(TD[1] && dom.evaluate("./TABLE",TD[1],"",1)){
-           // println("TD表格处理******************************");
+            println("TD表格处理******************************");
             if(TD[1].getAttribute('colspan') || TD[1].getAttribute('rowspan')){
                 var obj = {};
                 var table = dom.evaluate("./TABLE",TD[1],"",1);
                 var l = dom.evaluate("./TBODY/TR",table,"",0).length;//动态设置表头高度
-                var h = l*40+l+"px";
+                var h = l*22+l*10+"px";
                 obj.title = "<div class='thead' style='height:"+h+";line-height:"+h+"'>"+TD[0].innerHTML.replace("：","")+"</div>";//外面套一层DIV
                 obj.text = TD[1].innerHTML.replace(/style=\"(.*?)"/g,"")
                                             .replace(/：/g,'')
@@ -223,7 +225,7 @@ function createCommentJson(el) {
             }
         }
         (function(TD, infoNum,TH) {
-            //println("标准TD处理********************************");
+            println("标准TD处理********************************");
             for (var i = 0; i < infoNum; i+=2) {
                 var obj = {};
                 if(TH.length != 0){
@@ -232,12 +234,12 @@ function createCommentJson(el) {
                         obj.title = TH[m].innerText.replace(/\*/g,"");
                     }
                     var nextEl = TD[m];
-                    //println("这是TH结构的"+m+":"+obj.title+"*****************************");
+                    println("这是TH结构的"+m+":"+obj.title+"*****************************");
                 }else{
-                    /*var isFont = dom.evaluate("./FONT",TD[i],"",1);
-                    if(isFont){
+                    var isFont = dom.evaluate("./FONT",TD[i],"",1);
+                    if(isFont){//这也是温馨提示 --yy
                         continue;
-                    }*/
+                    }
                     IMG = dom.evaluate(".//IMG",TD[i],"",1);
                     if(IMG){// 照片--- yy
                         obj.title = IMG.getAttribute("alt");
@@ -258,8 +260,8 @@ function createCommentJson(el) {
                     }else{
                         continue;
                     }
-                   // println("这是纯TD结构的"+i+":"+obj.title+"****************************");
-                    var nextEl = TD[i + 1];
+                   println("这是纯TD结构的"+i+":"+obj.title+"****************************");
+                var nextEl = TD[i + 1];
                 }//有TH的特殊处理 ---yy
                 //var nextEl = tddoms[i].nextSibling.nextSibling;---xg
                 // 此处情况很多,nextEl.tagName == 'TD'改为nextEl；因为println(nextEl.tagName)这个处来的结果都是td,可是报错，所以去掉这个
@@ -268,6 +270,7 @@ function createCommentJson(el) {
                     var select = dom.evaluate(".//SELECT", nextEl, "", 1);
                     var radio = dom.evaluate(".//INPUT[@type='radio'][@checked='checked']",nextEl,"",1) || dom.evaluate(".//INPUT[@type='radio'][@checked]",nextEl,"",1);
                     var noChecked = dom.evaluate(".//INPUT[@type='radio'][not(@checked)]",nextEl,"",1);//单选有checked
+                    var textarea = dom.evaluate(".//TEXTAREA",nextEl,"",1);
                     var inputp = dom.evaluate(".//INPUT[@id='referenceNumber']", nextEl, "", 1);//单选,没有checked
                     var inputh = dom.evaluate(".//INPUT[@id='hostdeptValue']", nextEl, "", 1); //来文单位xg
                     var inputh2 = dom.evaluate(".//INPUT[@id='arriveUnit']", nextEl, "", 1); //来文单位2xg
@@ -301,6 +304,9 @@ function createCommentJson(el) {
                     }else if(softwareVersionSelect){//LM
                         var softwareVersion = dom.evaluate(".//INPUT[@id='softwareVersion']",dom,"",1);
                         obj.text = softwareVersion.value;  //lm
+                    }else if(textarea){
+                        println("******textarea*******");
+                        obj.text = textarea.innerHTML;
                     } else if (inputh2) { //来文单位2
                         obj.text = inputh2.value;
                     } else if (inputp) { //查找文号
@@ -401,14 +407,17 @@ function createCommentJson(el) {
                     }
                 }
                 //obj.text = obj.text.replace(/\t|\n|\r/mg, '');
-                if(/\s|\t|\n|\r/mg.test(obj.text)){
-                    obj.text = obj.text.replace(/\s\t|\n|\r/mg, '');
+                if(/&nbsp;|\s|\t|\n|\r/mg.test(obj.text)){
+                    obj.text = obj.text.replace(/&nbsp;|\s\t|\n|\r/mg, '');
                 }
                 if(obj.title == "&nbsp;"){//title为空,text变为title
                     obj.title = obj.text;
                     obj.text = "";
                 }
-                //println(obj.title +":" +obj.text);
+                if(!obj.title){//title 空 跳过
+                    continue;
+                }
+                println(obj.title +":" +obj.text);
                 comment.push(obj);
            };
        })
@@ -1246,13 +1255,8 @@ function buildSelectJson() {
                 var opinion = dom.evaluate(".//OPTION[@selected='selected']", itemdom[i], "", 1) || dom.evaluate(".//OPTION[@selected]", itemdom[i], "", 1) || dom.evaluate(".//OPTION", itemdom[i], "", 1);
                 result[itemdom[i].name] = opinion.value || '';
                 break;
-                case 'TEXTAREA'://xg  --cy有些textarea用value无法取到其内容
-                var textareavalue = itemdom[i].value;
-                if (textareavalue) {
-                    result[itemdom[i].name] = textareavalue || '';
-                }else{
-                    result[itemdom[i].name] = itemdom[i].innerHTML;
-                }
+                case 'TEXTAREA'://xg  --cytextarea用value无法取到其内容
+                result[itemdom[i].name] = itemdom[i].innerHTML;
                 break;
                 default:
                 result[itemdom[i].name] = itemdom[i].value;
@@ -1261,6 +1265,12 @@ function buildSelectJson() {
     }
     // deptNotifyValue，deptNotifyInput初始化
     var deptnotifydom = dom.evaluate(".//INPUT[@id='mainSenderValue']", dom.forms[0], "", 1);
+    var sex= dom.evaluate(".//INPUT[@radio][@checked]",dom.forms[0],1) || dom.evaluate(".//INPUT[@radio][@checked='*']",dom.forms[0],"",1);
+    if(sex){
+        println("2");
+        result.sex = sex.value == 1 ? "男" : "女";
+    }
+    println(result.sex);
     result.deptNotifyValue = deptnotifydom ? deptnotifydom.value : '';
     result = {
         url: action,
